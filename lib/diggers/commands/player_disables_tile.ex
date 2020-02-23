@@ -46,7 +46,14 @@ defmodule Diggers.PlayerDisablesTile do
 
   defp try_to_start_next_disabling_round(game) do
     if all_players_disabled_three_tiles_this_round?(game) do
-      %Diggers.NextDisablingRoundStarted{game_id: game.game_id}
+      {players, board_indexes} = Enum.reduce(game.players_boards, {[], []}, fn ({player_id, board_index}, {players, board_indexes}) ->
+        {players ++ [player_id], board_indexes ++ [board_index]}
+      end)
+
+      cycled_board_indexes = board_indexes |> List.pop_at(-1) |> Tuple.to_list |> List.flatten
+      players_boards = Enum.zip(players, cycled_board_indexes) |> Map.new
+
+      %Diggers.NextDisablingRoundStarted{game_id: game.game_id, players_boards: players_boards}
     end
   end
 

@@ -1,0 +1,6 @@
+<p><a href="/">Home</a> | <span><%= @player_id %></span></p>
+<script type="text/javascript">
+window.addEventListener('load', function() {
+  initialize('<%= @player_id %>', '<%= Phoenix.Token.sign(DiggersWeb.Endpoint, "salt", @player_id) %>', '<%= @game_id %>');
+});
+</script>

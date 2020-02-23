@@ -74,7 +74,7 @@ defmodule Diggers.Game do
 
 
   def board_of_player(game, player_id) do
-    Enum.at(game.players_boards, index_of_player(game, player_id))
+    game.players_boards[player_id]
   end
 
 

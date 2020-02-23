@@ -4,6 +4,8 @@
 
 pg_ctl -D /usr/local/var/postgres start
 
+mix do event_store.drop, event_store.create, event_store.init
+
 
 
 Ce document liste les interactions possible avec le système.

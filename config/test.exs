@@ -1,7 +1,7 @@
 import Config
 
 config :diggers, Diggers.EventStore,
-  serializer: Commanded.Serialization.JsonSerializer,
+  serializer: Diggers.JsonSerializer,
   username: "diggers",
   password: "diggers",
   database: "diggers_eventstore_test",

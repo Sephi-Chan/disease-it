@@ -1,21 +1,17 @@
 defmodule Diggers.NextDisablingRoundStarted do
   @derive Jason.Encoder
-  defstruct [:game_id]
+  defstruct [:game_id, :players_boards]
 
 
-  def apply(game, _event) do
+  def apply(game, event) do
     game
-      |> rotate_board_indexes
+      |> rotate_board_indexes(event)
       |> save_disabled_tiles
   end
 
 
-  defp rotate_board_indexes(game) do
-    %Diggers.Game{game |
-      players_boards: Enum.map(game.players_boards, fn (board_index) ->
-        rem(board_index + 1, Enum.count(game.players))
-      end)
-    }
+  defp rotate_board_indexes(game, event) do
+    %Diggers.Game{game | players_boards: event.players_boards}
   end
 
 
