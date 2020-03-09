@@ -29,7 +29,7 @@ defmodule DiggersWeb.GameChannel do
 
 
   def handle_in("start_disabling_phase", _params, socket) do
-    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerStartsGame{game_id: socket.assigns.game_id, player_id: socket.assigns.player_id})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerStartsGame{game_id: socket.assigns.game_id, player_id: socket.assigns.player_id, board: Diggers.Board.disease_it})
     {:reply, {:ok, %{}}, socket}
   end
 

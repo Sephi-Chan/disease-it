@@ -11,7 +11,8 @@ defmodule Diggers.Game do
     :paths,
     :gone_players,
     :round,
-    :lifes
+    :lifes,
+    :board
   ]
 
 
@@ -90,7 +91,7 @@ defmodule Diggers.Game do
 
   def neighbours_of_player(game, player_id) do
     tile = tile_of_player(game, player_id)
-    MapSet.new(Diggers.Tile.neighbours_of(tile))
+    MapSet.new(Diggers.Board.neighbours_of(game.board, tile))
   end
 
 
@@ -103,12 +104,12 @@ defmodule Diggers.Game do
   def available_tiles_for_player(game, player_id) do
     neighbours_of_player(game, player_id)
       |> MapSet.difference(disabled_tiles_for_player(game, player_id))
-      |> Enum.filter(&is_tile_available_with_dices_rolls?(&1, game.dices_rolls))
+      |> Enum.filter(&is_tile_available_with_dices_rolls?(&1, game.board, game.dices_rolls))
   end
 
 
-  defp is_tile_available_with_dices_rolls?(tile, dices_rolls) do
-    accepted_dices_rolls_for_tile = MapSet.new(Diggers.Tile.accepted_rolls(tile))
+  defp is_tile_available_with_dices_rolls?(tile, board, dices_rolls) do
+    accepted_dices_rolls_for_tile = MapSet.new(Diggers.Board.accepted_rolls(board, tile))
     dices_rolls = MapSet.new(dices_rolls || [])
     Enum.any?(MapSet.intersection(accepted_dices_rolls_for_tile, dices_rolls))
   end
@@ -159,7 +160,7 @@ defmodule Diggers.Game do
 
     player_path
       |> Enum.uniq
-      |> Enum.filter(&Diggers.Tile.diamond?/1)
+      |> Enum.filter(&Diggers.Board.diamond?(game.board, &1))
       |> Enum.map(fn (_tile) -> 3 end)
       |> Enum.sum
   end

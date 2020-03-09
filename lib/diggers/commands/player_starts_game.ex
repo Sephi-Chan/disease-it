@@ -1,5 +1,5 @@
 defmodule Diggers.PlayerStartsGame do
-  defstruct [:game_id, :player_id]
+  defstruct [:game_id, :player_id, :board]
 
   def execute(game, command) do
     cond do
@@ -14,7 +14,7 @@ defmodule Diggers.PlayerStartsGame do
 
       true ->
         players_boards = game.players |> Enum.with_index |> Map.new
-        %Diggers.DisablingPhaseStarted{game_id: game.game_id, players_boards: players_boards}
+        %Diggers.DisablingPhaseStarted{game_id: game.game_id, players_boards: players_boards, board: command.board || Diggers.Board.diggers}
     end
   end
 end

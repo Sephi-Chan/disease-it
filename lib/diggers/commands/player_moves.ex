@@ -63,7 +63,7 @@ defmodule Diggers.PlayerMoves do
 
 
   def try_to_exit(game, player_id, tile) do
-    if tile == Diggers.Tile.exit_tile do
+    if tile == Diggers.Board.exit_tile(game.board) do
       %Diggers.PlayerLeft{game_id: game.game_id, player_id: player_id}
     end
   end

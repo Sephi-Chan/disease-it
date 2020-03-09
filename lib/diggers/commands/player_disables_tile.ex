@@ -14,10 +14,10 @@ defmodule Diggers.PlayerDisablesTile do
       not Diggers.Game.disabling_phase?(game) ->
         {:error, :not_allowed_now}
 
-      not Diggers.Tile.on_board?(tile) ->
+      not Diggers.Board.on_board?(game.board, tile) ->
         {:error, :tile_not_found}
 
-      Diggers.Tile.start_tile == tile or Diggers.Tile.exit_tile == tile or Diggers.Tile.diamond?(tile) ->
+      Diggers.Board.special_tile?(game.board, tile) ->
         {:error, :not_allowed_on_special_tiles}
 
       Diggers.Game.disabled?(game, command.player_id, tile) ->
@@ -80,7 +80,7 @@ defmodule Diggers.PlayerDisablesTile do
 
 
   defp tile_has_disabled_neighbour?(game, player_id, tile) do
-    Diggers.Tile.neighbours_of(tile)
+    Diggers.Board.neighbours_of(game.board, tile)
       |> Enum.any?(&Diggers.Game.disabled?(game, player_id, &1))
   end
 end
