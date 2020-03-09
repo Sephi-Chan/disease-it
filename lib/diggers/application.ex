@@ -7,9 +7,7 @@ defmodule Diggers.Application do
       DiggersWeb.Endpoint,
       Diggers.CommandedApplication,
       Diggers.GameReadModelBuilder,
-      Diggers.GameSocketPusher,
       Diggers.GamesStore
-      # {TaskAfter.Worker, name: Diggers.TaskAfter}
     ]
 
     opts = [strategy: :one_for_one, name: Diggers.Supervisor]

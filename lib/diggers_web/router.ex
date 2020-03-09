@@ -16,7 +16,7 @@ defmodule DiggersWeb.Router do
   scope "/", DiggersWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
-    get "/:game_id", PageController, :index
+    get "/", PageController, :home
+    get "/g/:game_id", PageController, :game
   end
 end

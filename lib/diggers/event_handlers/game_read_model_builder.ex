@@ -24,19 +24,22 @@ defmodule Diggers.GameReadModelBuilder do
 
 
   def handle(event = %Diggers.PlayerJoinedLobby{}, _metadata) do
-    Diggers.GamesStore.player_joined(event.game_id, event.player_id)
+    game = Diggers.GamesStore.player_joined(event.game_id, event.player_id)
+    DiggersWeb.Endpoint.broadcast!("game:#{event.game_id}", "player_joined_lobby", game)
     :ok
   end
 
 
   def handle(event = %Diggers.PlayerLeftLobby{}, _metadata) do
-    Diggers.GamesStore.player_left(event.game_id, event.player_id)
+    game = Diggers.GamesStore.player_left(event.game_id, event.player_id)
+    DiggersWeb.Endpoint.broadcast!("game:#{event.game_id}", "player_left_lobby", game)
     :ok
   end
 
 
   def handle(event = %Diggers.DisablingPhaseStarted{}, _metadata) do
-    Diggers.GamesStore.disabling_phase_started(event.game_id, event.players_boards)
+    game = Diggers.GamesStore.disabling_phase_started(event.game_id, event.players_boards)
+    DiggersWeb.Endpoint.broadcast!("game:#{event.game_id}", "disabling_phase_started", game)
     :ok
   end
 

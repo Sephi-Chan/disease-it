@@ -1,0 +1,9 @@
+<div id="game-container">
+  <div id="game">
+</div>
+
+<script type="text/javascript">
+window.addEventListener('load', function() {
+  initialize('<%= @player_id %>', '<%= @player_token %>', '<%= @game_id %>', <%= raw(Jason.encode!(@game)) %>);
+});
+</script>

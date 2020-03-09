@@ -1,6 +1,10 @@
 defmodule TilesTest do
   use ExUnit.Case
 
+  test "build a board" do
+    Diggers.Board.diggers
+  end
+
 
   test "find neighbours when X is even" do
     neighbours = Diggers.Tile.neighbours_of({4, 4})

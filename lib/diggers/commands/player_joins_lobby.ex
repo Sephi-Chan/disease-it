@@ -4,11 +4,11 @@ defmodule Diggers.PlayerJoinsLobby do
 
   def execute(game, command) do
     cond do
-      Diggers.Game.has_player?(game, command.player_id) ->
-        {:error, :player_already_joined}
-
       not Diggers.Game.lobby_phase?(game) ->
         {:error, :not_allowed_now}
+
+      Diggers.Game.has_player?(game, command.player_id) ->
+        {:error, :player_already_joined}
 
       Diggers.Game.players_count(game) == 4 ->
         {:error, :no_more_player_allowed}

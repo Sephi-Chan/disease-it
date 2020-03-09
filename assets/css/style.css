@@ -1,4 +1,151 @@
 body {
-  background: #000;
+  background: #c7bfbf;
+  background: #333;
+  background: #454545;
+  font-family: Georgia, 'Times New Roman', Times, serif;
   color: #fff;
+  user-select: none;
+}
+
+#toggle-music-button {
+  transform-origin: 67px 85px;
+  position: absolute;
+  top: -65px;
+  right: -30px;
+  transform: scale(0.5);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+#toggle-music-button:hover { transform: scale(0.55) rotate(-15deg); }
+#toggle-music-button:active { transform: scale(0.5); }
+#toggle-music-button.muted { opacity: 0.5; }
+
+#game {
+  position: absolute;
+  top: 36px;
+  left: 40px;
+  width: 1440px;
+  height: 900px;
+  background: #4c4c4c;
+}
+
+#game-container {
+  position: relative;
+  width: 1509px;
+  height: 984px;
+  margin: 30px auto;
+  background: url("/images/ui/background.png");
+  overflow: hidden;
+}
+
+.container {
+  position: relative;
+}
+
+.container h1 {
+  position: absolute;
+  cursor: default;
+  user-select: none;
+}
+
+.container p {
+  position: absolute;
+  left: 60px;
+  font-size: 24px;
+  line-height: 30px;
+  width: 1320px;
+  text-align: left;
+}
+
+.container p span { color: #ffcc00; }
+
+.container .button {
+  position: absolute;
+  font-size: 32px;
+  font-weight: bold;
+  user-select: none;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+.container .button.enabled {
+  cursor: pointer;
+}
+
+.container .button.enabled:hover {
+  color: #fff;
+  text-shadow: -1px -1px 0 #666, 1px -1px 0 #666, -1px 1px 0 #666, 1px 1px 0 #666;
+}
+.container .button.enabled:active {
+  color: #ddd;
+  text-shadow: -1px -1px 0 #666, 1px -1px 0 #666, -1px 1px 0 #666, 1px 1px 0 #666;
+}
+
+
+.container.home h1, .container.lobby h1 {
+  top: 60px;
+  left: 60px;
+  z-index: 100;
+  width: 540px;
+  height: 120px;
+  overflow: hidden;
+}
+
+.container.home .button {
+  top: 250px;
+  left: 60px;
+  z-index: 2000000000;
+}
+
+
+.container.lobby #share-message { top: 250px; }
+.container.lobby #goal-message { top: 780px; }
+
+
+.container.lobby #slots {
+  width: 1382px;
+  height: 426px;
+  background: #ccc;
+  position: absolute;
+  top: 320px;
+  left: 27px;
+}
+
+.container.lobby #slots .slot {
+  width: 691px;
+  height: 213px;
+  position: absolute;
+  z-index: 90;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 36px;
+  line-height: 200px;
+  text-align: center;
+  color: #ccc;
+}
+
+.container.lobby #slots .slot.empty { color: #666; }
+.container.lobby #slots .slot.self { color: #ffcc00; }
+
+.container.lobby #slots #slot-1 { background: url("/images/ui/lobby/slot-1.png"); }
+.container.lobby #slots #slot-2 { background: url("/images/ui/lobby/slot-2.png"); left: 691px; }
+.container.lobby #slots #slot-3 { background: url("/images/ui/lobby/slot-3.png"); top: 213px; }
+.container.lobby #slots #slot-4 { background: url("/images/ui/lobby/slot-4.png"); left: 691px; top: 213px; }
+
+.container.lobby #slots #start-game {
+  background: url("/images/ui/lobby/start-game.png");
+  width: 200px;
+  height: 200px;
+  left: 591px;
+  top: 113px;
+  z-index: 100;
+}
+.container.lobby #slots #start-game.enabled:hover { margin-top: 1px; }
+.container.lobby #slots #start-game.enabled:active { margin-top: 2px; }
+
+
+
+.container.game #disabling-instructions {
+  top: 180px;
+  width: 680px;
+  left: 5px;
 }

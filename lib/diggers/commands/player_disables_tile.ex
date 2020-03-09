@@ -17,7 +17,7 @@ defmodule Diggers.PlayerDisablesTile do
       not Diggers.Tile.on_board?(tile) ->
         {:error, :tile_not_found}
 
-      Diggers.Tile.start?(tile) or Diggers.Tile.exit?(tile) or Diggers.Tile.diamond?(tile) ->
+      Diggers.Tile.start_tile == tile or Diggers.Tile.exit_tile == tile or Diggers.Tile.diamond?(tile) ->
         {:error, :not_allowed_on_special_tiles}
 
       Diggers.Game.disabled?(game, command.player_id, tile) ->

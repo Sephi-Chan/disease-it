@@ -39,7 +39,7 @@ defmodule DiggersTest do
     :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerOpensLobby{game_id: "game_1", player_id: "Corwin"})
     {:error, :player_not_found} = Diggers.CommandedApplication.dispatch(%Diggers.PlayerLeavesLobby{game_id: "game_1", player_id: "Mandor"})
     :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerLeavesLobby{game_id: "game_1", player_id: "Corwin"})
-    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerJoinsLobby{game_id: "game_1", player_id: "Corwin"})
+    {:error, :not_allowed_now} = Diggers.CommandedApplication.dispatch(%Diggers.PlayerJoinsLobby{game_id: "game_1", player_id: "Corwin"})
   end
 
 

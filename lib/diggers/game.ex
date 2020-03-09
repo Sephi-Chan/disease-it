@@ -108,7 +108,7 @@ defmodule Diggers.Game do
 
 
   defp is_tile_available_with_dices_rolls?(tile, dices_rolls) do
-    accepted_dices_rolls_for_tile = MapSet.new(Diggers.Tile.tiles[tile])
+    accepted_dices_rolls_for_tile = MapSet.new(Diggers.Tile.accepted_rolls(tile))
     dices_rolls = MapSet.new(dices_rolls || [])
     Enum.any?(MapSet.intersection(accepted_dices_rolls_for_tile, dices_rolls))
   end

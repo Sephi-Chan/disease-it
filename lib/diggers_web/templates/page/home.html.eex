@@ -1,0 +1,9 @@
+<div id="game-container">
+  <div id="game">
+</div>
+
+<script type="text/javascript">
+window.addEventListener('load', function() {
+  initialize('<%= @player_id %>', '<%= Phoenix.Token.sign(DiggersWeb.Endpoint, "salt", @player_id) %>', null);
+});
+</script>
