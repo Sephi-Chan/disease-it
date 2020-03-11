@@ -1,6 +1,6 @@
 import React from 'react';
 
-const scale = 2/3;
+const scale = 3/4;
 const itemScale = 4/5;
 const tileImageWidth = 380;
 const tileImageHeight = 380;
@@ -15,6 +15,7 @@ const badgeHitboxWidth = 200;
 const badgeHitboxHeight = 100;
 const badgeHitboxTopShift = 55;
 const itemImageWidth = 134;
+const playerIconImageWidth = 100;
 
 
 function remap(value, min1, max1, min2, max2) {
@@ -34,6 +35,7 @@ export default class Board extends React.Component {
       {this.tiles()}
       {this.shorelines()}
       {this.items()}
+      {this.player()}
     </div>
   }
 
@@ -41,11 +43,44 @@ export default class Board extends React.Component {
   tiles() {
     return this.state.tiles.map((function(tile){
       const key = tile.x + '_' + tile.y;
+      const isActive = this.isBadgeActive(tile.x, tile.y);
+
       return <React.Fragment key={key}>
-        <Tile {...tile} originX={this.state.originX} originY={this.state.originY} game={this.props.game} />
-        <Badge {...tile} originX={this.state.originX} originY={this.state.originY} game={this.props.game} items={this.props.items} onTileDisabling={this.props.onTileDisabling} />
+        <Tile {...tile} originX={this.state.originX} originY={this.state.originY} />
+        <Badge {...tile} originX={this.state.originX} originY={this.state.originY} isActive={isActive} onTileDisabling={this.props.onTileDisabling} />
       </React.Fragment>;
     }).bind(this));
+  }
+
+
+  isBadgeActive(x, y) {
+    if (this.props.game && this.props.game.phase == 'disabling') {
+      const playerDisabledAllHisTiles = this.props.game[this.props.playerId].tilesToDisable == 0;
+      const hasNoItemOnTile = this.props.items.filter(item => item.x == x && item.y == y).length == 0;
+      const isNotDisabled = this.props.disabledTilesByPlayer.indexOf(x + '_' + y) == -1;
+      const noNeighbourIsDisabled = this.neighboursOf(x, y).map(tile => this.props.disabledTilesByPlayer.indexOf(tile) != -1).filter(Boolean).length == 0;
+      return !playerDisabledAllHisTiles && hasNoItemOnTile && isNotDisabled && noNeighbourIsDisabled;
+    }
+    else if (this.props.game && this.props.game.phase == 'exploration') {
+      const boardIndex = this.props.game[this.props.playerId].boardIndex;
+      const disabledTiles = this.props.game.disabledTiles[boardIndex];
+      return disabledTiles.indexOf(x + '_' + y) == -1;
+    }
+    else {
+      return true;
+    }
+  }
+
+
+  neighboursOf(x, y) {
+    return [
+      (x + 1) + "_" + (y + 1),
+      (x + 1) + "_" + y,
+      x + "_" + (y - 1),
+      (x - 1) + "_" + (y - 1),
+      (x - 1) + "_" + y,
+      x + "_" + (y + 1)
+    ];
   }
 
 
@@ -64,6 +99,22 @@ export default class Board extends React.Component {
       const key = 'item_' + item.x + '_' + item.y + '_' + item.offsetX + '_' + item.offsetY;
       return <Item key={key} {...item} originX={this.state.originX} originY={this.state.originY} />;
     }).bind(this));
+  }
+
+
+  player() {
+    if (!(this.props.game && (this.props.game.phase == "disabling" || this.props.game.phase == "exploration"))) return;
+
+    const player = this.props.game[this.props.playerId];
+    const [x, y] = player.path[0].split("_").map(i => parseInt(i));
+    const style = {
+      left: Math.round(this.props.originX + (distanceBetweenOriginsX * (x - y) * scale) - (playerIconImageWidth / 2 * scale)),
+      top: Math.round(this.props.originY - (distanceBetweenOriginsY / 2 * (x + y) * scale) - (badgeHitboxTopShift * scale) - 15),
+      width: Math.round(playerIconImageWidth * scale),
+      zIndex: 210000000,
+    }
+
+    return <img src={'/images/icons/icon_player.png'} style={style} draggable='false' />;
   }
 
 
@@ -109,7 +160,7 @@ export default class Board extends React.Component {
 }
 
 
-function Tile({ x, y, terrain, diceRolls, zIndex, originX, originY, game }) {
+function Tile({ x, y, terrain, zIndex, originX, originY }) {
   const style = {
     left: Math.round(originX - (tileOriginX * scale) + (distanceBetweenOriginsX * (x - y) * scale)),
     top: Math.round(originY - (tileOriginY * scale) - (distanceBetweenOriginsY / 2 * (x + y) * scale)),
@@ -143,14 +194,11 @@ class Badge extends React.Component {
 
 
   render() {
-    // Depends on the phase.
-    const isActive = this.props.game && this.props.game.phase == 'disabling' && this.props.items.filter((function(item) { return item.x == this.props.x && item.y == this.props.y }).bind(this)).length == 0;
-
     const imageStyle = {
       width: Math.round(badgeImageWidth * scale),
       marginLeft: -badgeImageWidth / 2 * scale
     };
-    const classes = [ 'badge', isActive ? 'active' : null ].join(' ')
+    const classes = [ 'badge', this.props.isActive ? 'active' : null ].join(' ')
     const style = {
       left: Math.round(this.props.originX + (distanceBetweenOriginsX * (this.props.x - this.props.y) * scale) - (badgeHitboxWidth / 2 * scale)),
       top: Math.round(this.props.originY - (distanceBetweenOriginsY / 2 * (this.props.x + this.props.y) * scale) - (badgeHitboxTopShift * scale)),
@@ -159,7 +207,7 @@ class Badge extends React.Component {
       zIndex: 200000000,
     };
 
-    return <div className={classes} style={style} onClick={isActive ? this.badgeClicked : null}>
+    return <div className={classes} style={style} onClick={this.props.isActive ? this.badgeClicked : null}>
       <img src={'/images/icons/icon_' + this.props.diceRolls[0] + '.png'}  draggable='false' style={imageStyle} />
     </div>;
   }

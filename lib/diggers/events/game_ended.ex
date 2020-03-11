@@ -1,6 +1,6 @@
 defmodule Diggers.GameEnded do
   @derive Jason.Encoder
-  defstruct [:game_id, :dices_rolls]
+  defstruct [:game_id, :winners]
 
 
   def apply(game, _event) do

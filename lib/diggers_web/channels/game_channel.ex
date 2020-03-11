@@ -29,14 +29,19 @@ defmodule DiggersWeb.GameChannel do
 
 
   def handle_in("start_disabling_phase", _params, socket) do
-    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerStartsGame{game_id: socket.assigns.game_id, player_id: socket.assigns.player_id, board: Diggers.Board.disease_it})
+    Diggers.CommandedApplication.dispatch(%Diggers.PlayerStartsGame{game_id: socket.assigns.game_id, player_id: socket.assigns.player_id, board: Diggers.Board.disease_it})
     {:reply, {:ok, %{}}, socket}
   end
 
 
   def handle_in("player_disables_tile", params, socket) do
-    IO.inspect({"lol", params, params["tile"]})
-    # :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerDisablesTile{game_id: socket.assigns.game_id, player_id: socket.assigns.player_id, tile: "1_4"})
+    Diggers.CommandedApplication.dispatch(%Diggers.PlayerDisablesTile{game_id: socket.assigns.game_id, player_id: socket.assigns.player_id, tile: params["tile"]})
+    {:reply, {:ok, %{}}, socket}
+  end
+
+
+  def handle_in("player_rolls_dices", _params, socket) do
+    Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: socket.assigns.game_id, dices_rolls: Diggers.Dice.roll(4)})
     {:reply, {:ok, %{}}, socket}
   end
 

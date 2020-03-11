@@ -71,7 +71,7 @@ defmodule Diggers.PlayerMoves do
 
   def try_to_end_game(game) do
     if Enum.count(game.players) == Enum.count(game.gone_players) do
-      %Diggers.GameEnded{game_id: game.game_id}
+      %Diggers.GameEnded{game_id: game.game_id, winners: Diggers.Game.winners_bis(game)}
     end
   end
 

@@ -7,6 +7,7 @@ defmodule DiggersWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_diggers_key",
+    max_age: 31 * 24 * 60 * 60,
     signing_salt: "lcSqcZQ7"
   ]
 

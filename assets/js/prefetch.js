@@ -22,6 +22,7 @@ setTimeout(function () {
   ].map(preloadImage);
 
   [
-    [ 'horn', '/audio/horn.mp3' ]
+    [ 'horn', '/audio/horn.mp3' ],
+    [ 'dices_roll', '/audio/dices_roll.mp3' ],
   ].map(preloadSound);
 }, 500);

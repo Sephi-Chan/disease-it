@@ -51,7 +51,7 @@ defmodule Diggers.PlayerRollsDices do
 
   def try_to_end_game(game) do
     if Diggers.Game.all_players_died?(game) do
-      %Diggers.GameEnded{game_id: game.game_id}
+      %Diggers.GameEnded{game_id: game.game_id, winners: Diggers.Game.winners_bis(game)}
     end
   end
 

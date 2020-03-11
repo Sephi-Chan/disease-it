@@ -4,6 +4,7 @@ import 'phaser';
 import React from 'react';
 import { render } from 'react-dom';
 
+import camelCase from './camelcaser';
 import Home from './home';
 import Lobby from './lobby';
 import Game from './game';
@@ -30,7 +31,7 @@ class App extends React.Component {
 
 
   getScene(gameId, game) {
-    if (game) {
+    if (game && game.phase != "lobby") {
       return <Game {...this.props} game={game} />;
     }
     else if (gameId) {
@@ -60,5 +61,10 @@ class App extends React.Component {
 
 window.initialize = function(playerId, playerToken, gameId, game) {
   Push.initialize(playerId, playerToken);
-  render(<App playerId={playerId} playerToken={playerToken} gameId={gameId} game={game} />, document.getElementById('game'));
+
+  render(<App playerId={playerId}
+    playerToken={playerToken}
+    gameId={gameId}
+    game={game && camelCase(game)} />,
+    document.getElementById('game'));
 };

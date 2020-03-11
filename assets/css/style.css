@@ -36,8 +36,121 @@ body {
   height: 984px;
   margin: 30px auto;
   background: url("/images/ui/background.png");
-  overflow: hidden;
 }
+
+.container .instructions-container {
+  position: absolute;
+  top: 180px;
+  width: 751px;
+  z-index: 2100000000;
+  opacity: 1;
+  height: 450px;
+  background: url("/images/ui/instructions-background-short.png");
+}
+
+
+.container .instructions-container.tiny {
+  height: 100px;
+  width: 500px;
+  background: url("/images/ui/instructions-background-tiny.png");
+}
+
+
+.container .instructions-container.medium {
+  height: 450px;
+  background: url("/images/ui/instructions-background-medium.png");
+}
+
+
+.container .instructions-container.tall {
+  height: 620px;
+  background: url("/images/ui/instructions-background-tall.png");
+}
+
+.container .instructions-container img.close {
+  transform-origin: 67px 85px;
+  position: absolute;
+  cursor: pointer;
+  right: -32px;
+  top: -54px;
+  transform: scale(0.3);
+  opacity: 0.5;
+  transition: all 0.3s;
+  z-index: 2150000000;
+}
+
+
+.container .instructions-container img.close:hover { transform: scale(0.33) rotate(-15deg); }
+.container .instructions-container img.close:active { transform: scale(0.3); }
+.container .instructions-container img.close.muted { opacity: 0.5; }
+
+.container .instructions-container p {
+  position: static;
+  width: auto;
+  margin: 30px;
+  text-align: justify;
+}
+
+
+.container .throw-dices-button {
+  width: 150px;
+  cursor: pointer;
+  z-index: 2175000000;
+}
+
+.container .throw-dices-button.animated {
+  animation: pulsating 0.4s infinite alternate;
+}
+
+.container .instructions-container .throw-dices-button {
+  margin-left: 300px;
+}
+
+#throw-dices-button {
+  position: absolute;
+  top: 395px;
+  left: 640px;
+  width: 200px;
+}
+
+@keyframes pulsating {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.1); }
+}
+
+
+
+/* .container .dices-roller {
+  position: absolute;
+  top: 180px;
+  width: 300px;
+  height: 200px;
+  z-index: 2100000000;
+}
+
+.container .dices-roller .dice {
+  transform-origin: 67px 85px;
+  transform: scale(0.5);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.container .dices-roller #dices-roller-1 { top: 0; left: 0; }
+.container .dices-roller #dices-roller-2 { top: 0; left: 70px; }
+.container .dices-roller #dices-roller-3 { top: 0; left: 140px; }
+.container .dices-roller #dices-roller-4 { top: 0; left: 210px; }
+
+
+.container .dices-roller.animated .dice {
+  animation: dice 0.8s infinite;
+} */
+
+@keyframes dice {
+  0% { transform: scale(0.5) rotate(0deg); }
+  100% { transform: scale(0.5) rotate(720deg); }
+}
+
 
 .container {
   position: relative;
@@ -61,91 +174,48 @@ body {
 .container p span { color: #ffcc00; }
 
 .container .button {
-  position: absolute;
-  font-size: 32px;
+  height: 75px;
+  width: 450px;
   font-weight: bold;
-  user-select: none;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-}
-
-.container .button.enabled {
-  cursor: pointer;
-}
-
-.container .button.enabled:hover {
-  color: #fff;
-  text-shadow: -1px -1px 0 #666, 1px -1px 0 #666, -1px 1px 0 #666, 1px 1px 0 #666;
-}
-.container .button.enabled:active {
-  color: #ddd;
-  text-shadow: -1px -1px 0 #666, 1px -1px 0 #666, -1px 1px 0 #666, 1px 1px 0 #666;
-}
-
-
-.container.home h1, .container.lobby h1 {
-  top: 60px;
-  left: 60px;
-  z-index: 100;
-  width: 540px;
-  height: 120px;
-  overflow: hidden;
-}
-
-.container.home .button {
-  top: 250px;
-  left: 60px;
-  z-index: 2000000000;
-}
-
-
-.container.lobby #share-message { top: 250px; }
-.container.lobby #goal-message { top: 780px; }
-
-
-.container.lobby #slots {
-  width: 1382px;
-  height: 426px;
-  background: #ccc;
-  position: absolute;
-  top: 320px;
-  left: 27px;
-}
-
-.container.lobby #slots .slot {
-  width: 691px;
-  height: 213px;
-  position: absolute;
-  z-index: 90;
   font-family: Georgia, 'Times New Roman', Times, serif;
-  font-size: 36px;
-  line-height: 200px;
   text-align: center;
-  color: #ccc;
+  font-size: 28px;
+  line-height: 70px;
+  background-image: url("/images/ui/button.png");
+  color: #fff;
+  margin: 60px auto 30px;
 }
+.container .button.enabled { cursor: pointer; }
+.container .button.enabled:hover { color: #ffcc00; }
+.container .button.enabled:active { line-height: 74px; }
 
-.container.lobby #slots .slot.empty { color: #666; }
-.container.lobby #slots .slot.self { color: #ffcc00; }
 
-.container.lobby #slots #slot-1 { background: url("/images/ui/lobby/slot-1.png"); }
-.container.lobby #slots #slot-2 { background: url("/images/ui/lobby/slot-2.png"); left: 691px; }
-.container.lobby #slots #slot-3 { background: url("/images/ui/lobby/slot-3.png"); top: 213px; }
-.container.lobby #slots #slot-4 { background: url("/images/ui/lobby/slot-4.png"); left: 691px; top: 213px; }
 
-.container.lobby #slots #start-game {
-  background: url("/images/ui/lobby/start-game.png");
-  width: 200px;
-  height: 200px;
-  left: 591px;
-  top: 113px;
-  z-index: 100;
+.container.lobby .slots .slot {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 28px;
+  line-height: 60px;
+  text-align: center;
+  color: #fff;
+  height: 60px;
+  width: 666px;
+  margin: 20px auto;
+  background-image: url("/images/ui/lobby-button.png");
 }
-.container.lobby #slots #start-game.enabled:hover { margin-top: 1px; }
-.container.lobby #slots #start-game.enabled:active { margin-top: 2px; }
+.container.lobby .slots .slot.empty { color: #888; }
+.container.lobby .slots .slot.self { color: #ffcc00; }
 
 
 
-.container.game #disabling-instructions {
-  top: 180px;
-  width: 680px;
-  left: 5px;
+.container .help-message {
+  position: absolute;
+  animation: bounce 0.4s infinite alternate;
+  font-style: italic;
+}
+.container .help-message.origin { top: 770px; left: 190px; }
+.container .help-message.destination { top: 80px; left: 1130px; }
+
+@keyframes bounce {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(0, -4px); }
 }

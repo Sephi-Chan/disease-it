@@ -1,19 +1,25 @@
 import React from 'react';
-import { tiles, items } from './map';
-import Board from './board';
+import DisablingPhase from './disabling_phase';
+import ExplorationPhase from './exploration_phase';
 import Push from './push';
+import camelCase from './camelcaser';
 
 
 export default class Game extends React.Component {
   constructor(props) {
-    console.log(props);
-
     super(props);
+    this.state = { game: props.game };
+    this.updateGame = this.updateGame.bind(this);
+    this.updateGameWithWarning = this.updateGameWithWarning.bind(this);
   }
 
 
   componentDidMount() {
-    Push.game = Push.socket.channel('game:' + this.props.gameId, {});
+    Push.game = Push.socket.channel('game:' + this.props.game.gameId, {});
+    Push.game.on('player_disabled_tile', this.updateGame);
+    Push.game.on('next_disabling_round_started', this.updateGameWithWarning);
+    Push.game.on('exploration_phase_started', this.updateGameWithWarning);
+    Push.game.on('dices_rolled', this.updateGameWithWarning);
     Push.game.join();
   }
 
@@ -21,50 +27,31 @@ export default class Game extends React.Component {
   render() {
     return <div className='container game'>
       <h1><a href='/'><img src='/images/ui/disease-it.png' alt='Disease it' /></a></h1>
-      {this.getPhaseScene(this.props.game)}
+      {this.getPhaseScene(this.state.game)}
     </div>;
   }
 
 
   getPhaseScene(game) {
-    if (game.phase == "disabling") {
-      return <DisablingPhase {...this.props} game={game} />
+    const playerBoardIndex = this.state.game[this.props.playerId].boardIndex;
+    const disabledTilesByPlayer = this.state.game.disabledTiles[playerBoardIndex];
+
+    if (game.phase == 'disabling') {
+      return <DisablingPhase {...this.props} game={game} disabledTilesByPlayer={disabledTilesByPlayer} />
     }
-    else if (game.phase == "exploration") {
-      return <ExplorationPhase {...this.props} game={game} />
+    else if (game.phase == 'exploration') {
+      return <ExplorationPhase {...this.props} game={game} disabledTilesByPlayer={disabledTilesByPlayer} updateGame={this.updateGame} />
     }
   }
-}
 
 
-class DisablingPhase extends React.Component {
-  constructor(props) {
-    super(props);
-    this.onTileDisabling = this.onTileDisabling.bind(this);
+  updateGame(game) {
+    this.setState({ game: camelCase(game) });
   }
 
 
-  render() {
-    return <React.Fragment>
-      <p id="disabling-instructions">
-        Chaque joueur dispose d'un plateau de jeu.
-        Pour <span>corser la partie</span>, chaque joueur va désactiver trois cases sur chaque plateau.
-        Les plateaux seront ensuite distribués <span>aléatoirement</span> !
-        <br /><br />
-        <span>Cliquez</span> sur 3 cases à désactiver.
-      </p>
-      <Board width={1440} height={900} tiles={tiles} items={items} originX={1440/2 + 100} originY={900/2 - 30} game={this.props.game} onTileDisabling={this.onTileDisabling} />
-    </React.Fragment>;
+  updateGameWithWarning(game) {
+    window.sounds.horn.play();
+    this.updateGame(game)
   }
-
-
-  onTileDisabling(tile) {
-    Push.game.push('player_disables_tile', { tile: tile.x + '_' + tile.y });
-  }
-}
-
-
-function ExplorationPhase(props) {
-  console.log("ExplorationPhase", props);
-  return <div>Exploration phase…</div>;
 }

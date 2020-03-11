@@ -51,12 +51,12 @@ defmodule DiggersWeb.PageController do
 
       # Show the lobby page.
       game.phase == "lobby" && Enum.member?(game.players, conn.assigns.player_id) ->
-        conn
+        conn |> assign(:game, game)
 
       # Add the player to the game and show the lobby page.
       game.phase == "lobby" && !Enum.member?(game.players, conn.assigns.player_id) ->
         Diggers.CommandedApplication.dispatch(%Diggers.PlayerJoinsLobby{game_id: game.game_id, player_id: conn.assigns.player_id})
-        conn
+        conn |> assign(:game, game)
     end
   end
 end

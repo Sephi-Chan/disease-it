@@ -13,7 +13,7 @@
 #map .badge {
   position: absolute;
   text-align: center;
-  opacity: 0.6;
+  opacity: 0.4;
 }
 
 #map .badge.active {

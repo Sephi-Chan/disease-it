@@ -37,8 +37,8 @@ defmodule Diggers.GamesStore do
   end
 
 
-  def disabling_phase_started(game_id, players_boards) do
-    GenServer.call(Diggers.GamesStore, {:disabling_phase_started, game_id, players_boards})
+  def disabling_phase_started(game_id, players_boards, board) do
+    GenServer.call(Diggers.GamesStore, {:disabling_phase_started, game_id, players_boards, board})
   end
 
 
@@ -61,6 +61,30 @@ defmodule Diggers.GamesStore do
     GenServer.call(Diggers.GamesStore, {:dices_rolled, game_id, dices_rolls})
   end
 
+
+  def player_suffocated(game_id, player_id) do
+    GenServer.call(Diggers.GamesStore, {:player_suffocated, game_id, player_id})
+  end
+
+
+  def player_died(game_id, player_id) do
+    GenServer.call(Diggers.GamesStore, {:player_died, game_id, player_id})
+  end
+
+
+  def player_moved(game_id, player_id, tile) do
+    GenServer.call(Diggers.GamesStore, {:player_moved, game_id, player_id, tile})
+  end
+
+
+  def next_exploration_round_started(game_id) do
+    GenServer.call(Diggers.GamesStore, {:next_exploration_round_started, game_id})
+  end
+
+
+  def game_ended(game_id, winners) do
+    GenServer.call(Diggers.GamesStore, {:game_ended, game_id, winners})
+  end
 
 
   def init(_args) do
@@ -102,14 +126,17 @@ defmodule Diggers.GamesStore do
   end
 
 
-  def handle_call({:disabling_phase_started, game_id, players_boards}, _from, state) do
+  def handle_call({:disabling_phase_started, game_id, players_boards, board}, _from, state) do
+    start_tile = Diggers.Board.start_tile(board)
+
     game_state = players_boards
       |> Enum.reduce(state[game_id], fn ({player_id, board_index}, acc) ->
         Map.put(acc, player_id, %{
           board_index: board_index,
           tiles_to_disable: 3,
           lifes: 5,
-          path: ["0_0"]
+          current_round: nil,
+          path: [Diggers.Tile.dump(start_tile)]
         })
       end)
       |> put_in([:phase], "disabling")
@@ -153,6 +180,51 @@ defmodule Diggers.GamesStore do
   def handle_call({:dices_rolled, game_id, dices_rolls}, _from, state) do
     game_state = state[game_id]
       |> put_in([:dices_rolls], dices_rolls)
+
+    {:reply, game_state, Map.put(state, game_id, game_state)}
+  end
+
+
+  def handle_call({:player_suffocated, game_id, player_id}, _from, state) do
+    game_state = state[game_id]
+      |> update_in([player_id, :lifes], fn (lifes) -> lifes - 1 end)
+      |> put_in([player_id, :current_round], "suffocated")
+
+    {:reply, game_state, Map.put(state, game_id, game_state)}
+  end
+
+
+  def handle_call({:player_died, game_id, player_id}, _from, state) do
+    game_state = state[game_id]
+      |> put_in([player_id, :lifes], 0)
+
+    {:reply, game_state, Map.put(state, game_id, game_state)}
+  end
+
+
+  def handle_call({:player_moved, game_id, player_id, tile}, _from, state) do
+    game_state = state[game_id]
+      |> put_in([player_id, :current_round], tile)
+      |> update_in([player_id, :path], fn (path) -> [tile|path] end)
+
+    {:reply, game_state, Map.put(state, game_id, game_state)}
+  end
+
+
+  def handle_call({:next_exploration_round_started, game_id}, _from, state) do
+    game_state = Enum.reduce(state[game_id].players, state[game_id], fn (player_id, game_state) ->
+      put_in(game_state, [player_id, :current_round], nil)
+    end)
+      |> put_in([:dices_rolls], nil)
+
+    {:reply, game_state, Map.put(state, game_id, game_state)}
+  end
+
+
+  def handle_call({:game_ended, game_id, winners}, _from, state) do
+    game_state = state[game_id]
+      |> put_in([:winners], winners)
+      |> put_in([:phase], "results")
 
     {:reply, game_state, Map.put(state, game_id, game_state)}
   end

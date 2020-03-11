@@ -186,4 +186,11 @@ defmodule Diggers.Game do
   def all_players_died?(game) do
     Enum.all?(game.players, &Diggers.Game.player_died?(game, &1))
   end
+
+
+  def winners_bis(game) do
+    Enum.map(winners(game), fn ({score, player_id}) ->
+      %{player_id: player_id, score: score}
+    end)
+  end
 end

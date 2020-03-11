@@ -168,6 +168,10 @@ defmodule DiggersTest do
     :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: "game_1", dices_rolls: [1, 2, 2, 1]})
     {:error, :dices_already_rolled} = Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: "game_1", dices_rolls: [1, 2, 2, 1]})
     assert Diggers.GamesStore.game("game_1").dices_rolls == [1, 2, 2, 1]
+    assert Diggers.GamesStore.game("game_1")["Mandor"].lifes == 4
+    assert Diggers.GamesStore.game("game_1")["Mandor"].current_round == "suffocated"
+    assert Diggers.GamesStore.game("game_1")["Corwin"].lifes == 5
+    assert Diggers.GamesStore.game("game_1")["Corwin"].current_round == nil
 
     {:error, :player_not_found} = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Eric", tile: "1_1"})
     {:error, :suffocated_this_round} = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Mandor", tile: "1_1"})
@@ -175,6 +179,11 @@ defmodule DiggersTest do
     {:error, :tile_is_disabled} = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Corwin", tile: "0_1"})
     {:error, :tile_is_unavailable} = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Corwin", tile: "1_1"})
     :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Corwin", tile: "1_0"})
+    assert Diggers.GamesStore.game("game_1")["Corwin"].current_round == nil
+    assert Diggers.GamesStore.game("game_1")["Corwin"].path == ["1_0", "0_0"]
+    assert Diggers.GamesStore.game("game_1")["Corwin"].current_round == nil
+    assert Diggers.GamesStore.game("game_1")["Mandor"].path == ["0_0"]
+    assert Diggers.GamesStore.game("game_1").dices_rolls == nil
 
     :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: "game_1", dices_rolls: [3, 3, 5, 6]})
     :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Corwin", tile: "2_1"})
@@ -224,6 +233,8 @@ defmodule DiggersTest do
 
     {:error, :not_allowed_now} = Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: "game_1", dices_rolls: [2, 2, 4, 5]})
     {:error, :not_allowed_now} = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Mandor", tile: "9_9"})
+    assert Diggers.GamesStore.game("game_1").phase == "results"
+    assert Diggers.GamesStore.game("game_1").winners == [%{"player_id" => "Corwin", "score" => 16}, %{"player_id" => "Mandor", "score" => 8}]
 
     [{16, "Corwin"}, {8, "Mandor"}] = Diggers.Game.winners(game())
   end
