@@ -13,8 +13,7 @@ defmodule Diggers.PlayerMoved do
 
 
   defp save_action_for_this_round(game, player_id, tile) do
-    player_index = Diggers.Game.index_of_player(game, player_id)
-    %Diggers.Game{game | actions_this_round: List.replace_at(game.actions_this_round, player_index, tile)}
+    %Diggers.Game{game | actions_this_round: Map.put(game.actions_this_round, player_id, tile)}
   end
 
 

@@ -2,6 +2,7 @@ import React from 'react';
 import DisablingPhase from './disabling_phase';
 import ExplorationPhase from './exploration_phase';
 import GameOver from './game_over';
+import Results from './results';
 import Push from './push';
 import camelCase from './camelcaser';
 
@@ -58,8 +59,12 @@ export default class Game extends React.Component {
       return <ExplorationPhase {...this.props} game={game} disabledTilesByPlayer={disabledTilesByPlayer} updateGame={this.updateGame} />
     }
     else if (game.phase == 'results') {
-      return <GameOver {...this.props} game={game} />
-
+      if (game.winners.length == 0) {
+        return <GameOver {...this.props} game={game} />
+      }
+      else {
+        return <Results {...this.props} game={game} />
+      }
     }
   }
 
@@ -101,19 +106,19 @@ export default class Game extends React.Component {
 
 
   nextDisablingRoundStarted(game) {
-    if (document.visibilityState == 'hidden') window.sounds.horn.play();
+    window.sounds.horn.play();
     this.updateGame(game);
   }
 
 
   explorationPhaseStarted(game) {
-    if (document.visibilityState == 'hidden') window.sounds.horn.play();
+    window.sounds.horn.play();
     this.updateGame(game);
   }
 
 
   nextExplorationRoundStarted(game) {
-    if (document.visibilityState == 'hidden') window.sounds.horn.play();
+    window.sounds.horn.play();
     this.updateGame(game);
   }
 }

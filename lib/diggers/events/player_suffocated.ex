@@ -4,9 +4,8 @@ defmodule Diggers.PlayerSuffocated do
 
 
   def apply(game, event) do
-    player_index = Diggers.Game.index_of_player(game, event.player_id)
     %Diggers.Game{game |
-      actions_this_round: List.replace_at(game.actions_this_round, player_index, "suffocation"),
+      actions_this_round: Map.put(game.actions_this_round, event.player_id, "suffocation"),
       lifes: update_in(game.lifes, [event.player_id], fn (count) -> max(count - 1, 0) end)
     }
   end

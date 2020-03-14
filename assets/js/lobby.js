@@ -3,9 +3,7 @@ import Push from './push';
 import camelCase from './camelcaser';
 import Board from './board';
 import { tiles, items } from './map';
-
-
-const diseases = [ 'Peste', 'Choléra', 'Lèpre', 'Variole' ];
+import { diseases } from './diseases';
 
 
 export default class Lobby extends React.Component {

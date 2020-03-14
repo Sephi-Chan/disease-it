@@ -11,12 +11,6 @@
 
 
 #map .player.gone { animation: bounce 0.4s infinite alternate; }
-/* #map .player.gone.leaving { animation: leaving 2s; } */
-
-@keyframes leaving {
-  0% { transform: translate(0, 0); }
-  100% { transform: translate(200px, 0); }
-}
 
 
 #map .badge {

@@ -1,7 +1,6 @@
 import React from 'react';
 import { tiles, items } from './map';
 import Board from './board';
-// import Push from './push';
 
 
 export default class GameOver extends React.Component {

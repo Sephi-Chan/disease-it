@@ -7,9 +7,17 @@ export default class extends React.Component {
 
     const audio = new Audio('/audio/spiky-whimsical-fantasy-the-docks.mp3');
     audio.loop = true;
+    audio.autoplay = true;
 
     this.state = { audio: audio, muted: true };
     this.toggle = this.toggle.bind(this);
+  }
+
+
+  componentDidMount() {
+    this.state.audio.addEventListener('play', function() {
+      this.setState({ muted: false })
+    }.bind(this));
   }
 
 

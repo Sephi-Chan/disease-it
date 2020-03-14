@@ -125,16 +125,13 @@ defmodule Diggers.Game do
   end
 
 
-
   def already_moved?(game, player_id) do
-    player_index = Diggers.Game.index_of_player(game, player_id)
-    Enum.at(game.actions_this_round, player_index) != nil
+    game.actions_this_round[player_id] != nil
   end
 
 
   def already_suffocated?(game, player_id) do
-    player_index = Diggers.Game.index_of_player(game, player_id)
-    Enum.at(game.actions_this_round, player_index) == "suffocation"
+    game.actions_this_round[player_id] == "suffocation"
   end
 
 
@@ -179,15 +176,17 @@ defmodule Diggers.Game do
 
 
   def all_players_suffocated?(game) do
-    Enum.all?(game.actions_this_round, fn (action) -> action == "suffocation" end)
+    game.actions_this_round
+      |> Map.drop(dead_players(game) ++ gone_players(game))
+      |> Enum.all?(fn ({_player_id, action}) -> action == "suffocation" end)
   end
 
 
-  # for each player still on board, check if he acted.
   def all_players_acted?(game) do
-    II.inspect(game)
-    IO.inspect game.actions_this_round
-    Enum.all?(remove_gone_players_from_actions(game).actions_this_round)
+    game.actions_this_round
+      |> Map.drop(dead_players(game) ++ gone_players(game))
+      |> Map.values()
+      |> Enum.all?
   end
 
 
@@ -205,5 +204,17 @@ defmodule Diggers.Game do
 
   def max_dices_count(game) do
     max(4 - Enum.count(game.gone_players), 1)
+  end
+
+
+  defp gone_players(game) do
+    Map.keys(game.gone_players)
+  end
+
+
+  defp dead_players(game) do
+    game.lifes
+      |> Enum.filter(fn ({_player_id, life}) -> life == 0 end)
+      |> Enum.map(fn ({player_id, _life}) -> player_id end)
   end
 end

@@ -5,6 +5,7 @@ body {
   font-family: Georgia, 'Times New Roman', Times, serif;
   color: #fff;
   user-select: none;
+  overflow: hidden;
 }
 
 #toggle-music-button {
@@ -91,7 +92,6 @@ body {
   text-align: justify;
 }
 
-
 .container .throw-dices-button {
   width: 150px;
   cursor: pointer;
@@ -120,32 +120,6 @@ body {
 
 
 
-/* .container .dices-roller {
-  position: absolute;
-  top: 180px;
-  width: 300px;
-  height: 200px;
-  z-index: 2100000000;
-}
-
-.container .dices-roller .dice {
-  transform-origin: 67px 85px;
-  transform: scale(0.5);
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.container .dices-roller #dices-roller-1 { top: 0; left: 0; }
-.container .dices-roller #dices-roller-2 { top: 0; left: 70px; }
-.container .dices-roller #dices-roller-3 { top: 0; left: 140px; }
-.container .dices-roller #dices-roller-4 { top: 0; left: 210px; }
-
-
-.container .dices-roller.animated .dice {
-  animation: dice 0.8s infinite;
-} */
-
 @keyframes dice {
   0% { transform: scale(0.5) rotate(0deg); }
   100% { transform: scale(0.5) rotate(720deg); }
@@ -154,6 +128,8 @@ body {
 
 .container {
   position: relative;
+  font-size: 24px;
+  line-height: 30px;
 }
 
 .container h1 {
@@ -162,16 +138,17 @@ body {
   user-select: none;
 }
 
-.container p {
-  position: absolute;
-  left: 60px;
-  font-size: 24px;
-  line-height: 30px;
-  width: 1320px;
+.container p, .container table {
   text-align: left;
+  margin: 30px;
 }
 
 .container p span { color: #ffcc00; }
+.container .self { color: #ffcc00; }
+.container table { width: 60%; margin: 50px auto 30px; }
+.container table td { padding: 8px 0; }
+.container table td:first-child { text-align: right; padding-right: 12px; }
+.container table td:last-child { text-align: left; padding-left: 12px; }
 
 .container .button {
   height: 75px;
@@ -225,9 +202,10 @@ body {
   position: absolute;
   animation: bounce 0.4s infinite alternate;
   font-style: italic;
+  width: 300px;
 }
-.container .help-message.origin { top: 770px; left: 190px; }
-.container .help-message.destination { top: 80px; left: 1130px; }
+.container .help-message.origin { top: 740px; left: 120px; }
+.container .help-message.destination { top: 50px; left: 1130px; }
 
 @keyframes bounce {
   0% { transform: translate(0, 0); }

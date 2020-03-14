@@ -12,8 +12,8 @@ defmodule Diggers.DicesRolled do
 
 
   defp blank_actions_for_round(game) do
-    Enum.reduce(game.players, [], fn (player_id, memo) ->
-      List.insert_at(memo, -1, if Diggers.Game.player_died?(game, player_id) do "dead" else nil end)
+    Enum.reduce(game.players, %{}, fn (player_id, memo) ->
+      Map.put(memo, player_id, if Diggers.Game.player_died?(game, player_id) do "dead" else nil end)
     end)
   end
 end
