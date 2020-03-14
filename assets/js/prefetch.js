@@ -15,10 +15,6 @@ function preloadSound([ id, url ]) {
 setTimeout(function () {
   [
     "/images/ui/lobby/start-game.png",
-    "/images/ui/lobby/slot-1.png",
-    "/images/ui/lobby/slot-2.png",
-    "/images/ui/lobby/slot-3.png",
-    "/images/ui/lobby/slot-4.png",
   ].map(preloadImage);
 
   [
