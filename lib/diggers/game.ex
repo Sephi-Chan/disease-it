@@ -183,6 +183,14 @@ defmodule Diggers.Game do
   end
 
 
+  # for each player still on board, check if he acted.
+  def all_players_acted?(game) do
+    II.inspect(game)
+    IO.inspect game.actions_this_round
+    Enum.all?(remove_gone_players_from_actions(game).actions_this_round)
+  end
+
+
   def all_players_died?(game) do
     Enum.all?(game.players, &Diggers.Game.player_died?(game, &1))
   end
@@ -192,5 +200,10 @@ defmodule Diggers.Game do
     Enum.map(winners(game), fn ({score, player_id}) ->
       %{player_id: player_id, score: score}
     end)
+  end
+
+
+  def max_dices_count(game) do
+    max(4 - Enum.count(game.gone_players), 1)
   end
 end

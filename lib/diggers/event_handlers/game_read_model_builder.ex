@@ -24,14 +24,14 @@ defmodule Diggers.GameReadModelBuilder do
 
 
   def handle(event = %Diggers.PlayerJoinedLobby{}, _metadata) do
-    game = Diggers.GamesStore.player_joined(event.game_id, event.player_id)
+    game = Diggers.GamesStore.player_joined_lobby(event.game_id, event.player_id)
     DiggersWeb.Endpoint.broadcast!("game:#{event.game_id}", "player_joined_lobby", game)
     :ok
   end
 
 
   def handle(event = %Diggers.PlayerLeftLobby{}, _metadata) do
-    game = Diggers.GamesStore.player_left(event.game_id, event.player_id)
+    game = Diggers.GamesStore.player_left_lobby(event.game_id, event.player_id)
     DiggersWeb.Endpoint.broadcast!("game:#{event.game_id}", "player_left_lobby", game)
     :ok
   end
@@ -89,6 +89,13 @@ defmodule Diggers.GameReadModelBuilder do
   def handle(event = %Diggers.PlayerMoved{}, _metadata) do
     game = Diggers.GamesStore.player_moved(event.game_id, event.player_id, event.tile)
     DiggersWeb.Endpoint.broadcast!("game:#{event.game_id}", "player_moved", game)
+    :ok
+  end
+
+
+  def handle(event = %Diggers.PlayerLeft{}, _metadata) do
+    game = Diggers.GamesStore.player_left(event.game_id, event.player_id)
+    DiggersWeb.Endpoint.broadcast!("game:#{event.game_id}", "player_left", game)
     :ok
   end
 

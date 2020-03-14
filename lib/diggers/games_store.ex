@@ -27,13 +27,13 @@ defmodule Diggers.GamesStore do
   end
 
 
-  def player_joined(game_id, player_id) do
-    GenServer.call(Diggers.GamesStore, {:player_joined, game_id, player_id})
+  def player_joined_lobby(game_id, player_id) do
+    GenServer.call(Diggers.GamesStore, {:player_joined_lobby, game_id, player_id})
   end
 
 
-  def player_left(game_id, player_id) do
-    GenServer.call(Diggers.GamesStore, {:player_left, game_id, player_id})
+  def player_left_lobby(game_id, player_id) do
+    GenServer.call(Diggers.GamesStore, {:player_left_lobby, game_id, player_id})
   end
 
 
@@ -77,6 +77,11 @@ defmodule Diggers.GamesStore do
   end
 
 
+  def player_left(game_id, player_id) do
+    GenServer.call(Diggers.GamesStore, {:player_left, game_id, player_id})
+  end
+
+
   def next_exploration_round_started(game_id) do
     GenServer.call(Diggers.GamesStore, {:next_exploration_round_started, game_id})
   end
@@ -114,13 +119,13 @@ defmodule Diggers.GamesStore do
   end
 
 
-  def handle_call({:player_joined, game_id, player_id}, _from, state) do
+  def handle_call({:player_joined_lobby, game_id, player_id}, _from, state) do
     game_state = update_in(state[game_id], [:players], fn (players) -> players ++ [player_id] end)
     {:reply, game_state, Map.put(state, game_id, game_state)}
   end
 
 
-  def handle_call({:player_left, game_id, player_id}, _from, state) do
+  def handle_call({:player_left_lobby, game_id, player_id}, _from, state) do
     game_state = update_in(state[game_id], [:players], fn (players) -> List.delete(players, player_id) end)
     {:reply, game_state, Map.put(state, game_id, game_state)}
   end
@@ -172,6 +177,8 @@ defmodule Diggers.GamesStore do
   def handle_call({:exploration_phase_started, game_id}, _from, state) do
     game_state = state[game_id]
       |> put_in([:phase], "exploration")
+      |> put_in([:gone_players], [])
+      |> put_in([:dead_players], [])
 
     {:reply, game_state, Map.put(state, game_id, game_state)}
   end
@@ -197,6 +204,7 @@ defmodule Diggers.GamesStore do
   def handle_call({:player_died, game_id, player_id}, _from, state) do
     game_state = state[game_id]
       |> put_in([player_id, :lifes], 0)
+      |> update_in([:dead_players], fn (dead_players) -> [player_id|dead_players] end)
 
     {:reply, game_state, Map.put(state, game_id, game_state)}
   end
@@ -206,6 +214,14 @@ defmodule Diggers.GamesStore do
     game_state = state[game_id]
       |> put_in([player_id, :current_round], tile)
       |> update_in([player_id, :path], fn (path) -> [tile|path] end)
+
+    {:reply, game_state, Map.put(state, game_id, game_state)}
+  end
+
+
+  def handle_call({:player_left, game_id, player_id}, _from, state) do
+    game_state = state[game_id]
+      |> update_in([:gone_players], fn (gone_players) -> [player_id|gone_players] end)
 
     {:reply, game_state, Map.put(state, game_id, game_state)}
   end

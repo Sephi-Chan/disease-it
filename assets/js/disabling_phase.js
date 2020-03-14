@@ -17,7 +17,7 @@ export default class DisablingPhase extends React.Component {
     return <React.Fragment>
       {this.instructions()}
       {this.helpMessages()}
-      <Board {...this.props} width={1440} height={900} tiles={tiles} items={items} originX={1440/2 + 100} originY={900/2 - 30} onTileDisabling={this.onTileDisabling} />
+      <Board {...this.props} width={1440} height={900} tiles={tiles} items={items} originX={1440/2 + 50} originY={900/2 - 30} onBadgeClick={this.onTileDisabling} />
     </React.Fragment>;
   }
 

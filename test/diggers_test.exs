@@ -240,6 +240,65 @@ defmodule DiggersTest do
   end
 
 
+  test "Gone players are not counted in 'all players suffocated' or 'all players acted' so the game can continue for others" do
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerOpensLobby{game_id: "game_1", player_id: "Corwin"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerJoinsLobby{game_id: "game_1", player_id: "Mandor"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerStartsGame{game_id: "game_1", player_id: "Corwin"})
+
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerDisablesTile{game_id: "game_1", player_id: "Corwin", tile: "1_3"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerDisablesTile{game_id: "game_1", player_id: "Corwin", tile: "0_1"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerDisablesTile{game_id: "game_1", player_id: "Corwin", tile: "3_4"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerDisablesTile{game_id: "game_1", player_id: "Mandor", tile: "1_0"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerDisablesTile{game_id: "game_1", player_id: "Mandor", tile: "3_2"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerDisablesTile{game_id: "game_1", player_id: "Mandor", tile: "5_4"})
+
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerDisablesTile{game_id: "game_1", player_id: "Corwin", tile: "2_3"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerDisablesTile{game_id: "game_1", player_id: "Corwin", tile: "0_1"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerDisablesTile{game_id: "game_1", player_id: "Corwin", tile: "3_0"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerDisablesTile{game_id: "game_1", player_id: "Mandor", tile: "8_9"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerDisablesTile{game_id: "game_1", player_id: "Mandor", tile: "2_2"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerDisablesTile{game_id: "game_1", player_id: "Mandor", tile: "4_3"})
+
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: "game_1", dices_rolls: [2, 3, 5, 2]})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Corwin", tile: "1_0"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Mandor", tile: "1_1"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: "game_1", dices_rolls: [2, 2, 5, 2]})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Mandor", tile: "2_1"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Corwin", tile: "2_1"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: "game_1", dices_rolls: [2, 2, 2, 3]})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Corwin", tile: "3_2"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Mandor", tile: "1_1"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: "game_1", dices_rolls: [2, 2, 2, 5]})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Corwin", tile: "3_3"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Mandor", tile: "2_1"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: "game_1", dices_rolls: [1, 1, 1, 1]})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Corwin", tile: "4_4"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Mandor", tile: "3_1"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: "game_1", dices_rolls: [2, 3, 5, 6]})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Corwin", tile: "5_5"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Mandor", tile: "2_1"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: "game_1", dices_rolls: [2, 3, 5, 6]})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Corwin", tile: "6_6"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Mandor", tile: "1_1"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: "game_1", dices_rolls: [2, 3, 5, 6]})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Corwin", tile: "7_7"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Mandor", tile: "2_1"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: "game_1", dices_rolls: [2, 3, 5, 6]})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Corwin", tile: "8_8"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Mandor", tile: "1_1"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: "game_1", dices_rolls: [2, 3, 5, 6]})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Corwin", tile: "9_9"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Mandor", tile: "2_1"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: "game_1", dices_rolls: [2, 3, 5]})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Mandor", tile: "1_1"})
+    IO.inspect(game())
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: "game_1", dices_rolls: [6, 6, 6]})
+    IO.inspect Diggers.Game.available_tiles_for_player(game(), "Mandor")
+
+    [{10, "Corwin"}] = Diggers.Game.winners(game())
+  end
+
+
   test "A game where everybody dies" do
     :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerOpensLobby{game_id: "game_1", player_id: "Corwin"})
     :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerJoinsLobby{game_id: "game_1", player_id: "Mandor"})

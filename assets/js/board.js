@@ -1,4 +1,5 @@
 import React from 'react';
+import { LongPoll } from 'phoenix';
 
 const scale = 3/4;
 const itemScale = 4/5;
@@ -16,6 +17,7 @@ const badgeHitboxHeight = 100;
 const badgeHitboxTopShift = 55;
 const itemImageWidth = 134;
 const playerIconImageWidth = 100;
+const plagueDoctorImageWidth = 100;
 
 
 function remap(value, min1, max1, min2, max2) {
@@ -31,40 +33,47 @@ export default class Board extends React.Component {
 
 
   render() {
-    return <div id='map'>
-      {this.tiles()}
+    const player = this.props.game ? this.props.game[this.props.playerId] : null;
+    const playerTile = player ? player.path[0] : null;
+    const tilesWithItems = objectFromArray(this.props.items.map(({x, y}) => x + '_' + y));
+    const disabledTiles = objectFromArray(this.props.game ? this.props.game.disabledTiles[player.boardIndex] : []);
+    const neighbourTiles = player ? this.neighboursOf(player.path[0]) : [];
+
+    return <div id='map' className={this.props.game ? this.props.game.phase : null}>
+      {this.tiles(playerTile, tilesWithItems, disabledTiles, neighbourTiles)}
       {this.shorelines()}
       {this.items()}
       {this.player()}
+      {this.plagueDoctors(disabledTiles)}
     </div>
   }
 
 
-  tiles() {
+  tiles(playerTile, tilesWithItems, disabledTiles, neighbourTiles) {
     return this.state.tiles.map((function(tile){
       const key = tile.x + '_' + tile.y;
-      const isActive = this.isBadgeActive(tile.x, tile.y);
+      const isVisible = disabledTiles[key] == undefined && playerTile != key;
+      const isActive = isVisible && this.isBadgeActive(key, tile.diceRolls, tilesWithItems, disabledTiles, neighbourTiles);
 
       return <React.Fragment key={key}>
         <Tile {...tile} originX={this.state.originX} originY={this.state.originY} />
-        <Badge {...tile} originX={this.state.originX} originY={this.state.originY} isActive={isActive} onTileDisabling={this.props.onTileDisabling} />
+        {isVisible && <Badge {...tile} originX={this.state.originX} originY={this.state.originY} isActive={isActive} onBadgeClick={this.props.onBadgeClick} />}
       </React.Fragment>;
     }).bind(this));
   }
 
 
-  isBadgeActive(x, y) {
+  isBadgeActive(tile, acceptedRolls, tilesWithItems, disabledTiles, neighbourTiles) {
     if (this.props.game && this.props.game.phase == 'disabling') {
-      const playerDisabledAllHisTiles = this.props.game[this.props.playerId].tilesToDisable == 0;
-      const hasNoItemOnTile = this.props.items.filter(item => item.x == x && item.y == y).length == 0;
-      const isNotDisabled = this.props.disabledTilesByPlayer.indexOf(x + '_' + y) == -1;
-      const noNeighbourIsDisabled = this.neighboursOf(x, y).map(tile => this.props.disabledTilesByPlayer.indexOf(tile) != -1).filter(Boolean).length == 0;
-      return !playerDisabledAllHisTiles && hasNoItemOnTile && isNotDisabled && noNeighbourIsDisabled;
+      if (this.props.game[this.props.playerId].tilesToDisable == 0) return false;
+      if (tilesWithItems[tile]) return false;
+      if (disabledTiles[tile]) return false;
+      return this.neighboursOf(tile).map(neighbour => disabledTiles[neighbour]).filter(Boolean).length == 0;
     }
     else if (this.props.game && this.props.game.phase == 'exploration') {
-      const boardIndex = this.props.game[this.props.playerId].boardIndex;
-      const disabledTiles = this.props.game.disabledTiles[boardIndex];
-      return disabledTiles.indexOf(x + '_' + y) == -1;
+      if (this.props.game[this.props.playerId].currentRound != null) return false;
+      return neighbourTiles.filter(tile => !disabledTiles[tile]).indexOf(tile) != -1
+        && (this.props.game.dicesRolls || []).indexOf(acceptedRolls[0]) != -1;
     }
     else {
       return true;
@@ -72,14 +81,16 @@ export default class Board extends React.Component {
   }
 
 
-  neighboursOf(x, y) {
+  neighboursOf(tile) {
+    const [x, y] = tile.split('_').map(i => parseInt(i));
+
     return [
-      (x + 1) + "_" + (y + 1),
-      (x + 1) + "_" + y,
-      x + "_" + (y - 1),
-      (x - 1) + "_" + (y - 1),
-      (x - 1) + "_" + y,
-      x + "_" + (y + 1)
+      (x + 1) + '_' + (y + 1),
+      (x + 1) + '_' + y,
+      x + '_' + (y - 1),
+      (x - 1) + '_' + (y - 1),
+      (x - 1) + '_' + y,
+      x + '_' + (y + 1)
     ];
   }
 
@@ -103,18 +114,36 @@ export default class Board extends React.Component {
 
 
   player() {
-    if (!(this.props.game && (this.props.game.phase == "disabling" || this.props.game.phase == "exploration"))) return;
+    if (!this.props.game || this.props.game.phase == 'lobby') return null;
 
     const player = this.props.game[this.props.playerId];
-    const [x, y] = player.path[0].split("_").map(i => parseInt(i));
+    const classes = [ 'player', (this.props.game.gonePlayers || []).indexOf(this.props.playerId) != -1 ? 'gone leaving' : null ].join(' ');
+    const [x, y] = parseTile(player.path[0]);
     const style = {
       left: Math.round(this.props.originX + (distanceBetweenOriginsX * (x - y) * scale) - (playerIconImageWidth / 2 * scale)),
       top: Math.round(this.props.originY - (distanceBetweenOriginsY / 2 * (x + y) * scale) - (badgeHitboxTopShift * scale) - 15),
       width: Math.round(playerIconImageWidth * scale),
-      zIndex: 210000000,
+      zIndex: 210000000
     }
 
-    return <img src={'/images/icons/icon_player.png'} style={style} draggable='false' />;
+    return <img src={'/images/icons/icon_player.png'} className={classes} style={style} draggable='false' />;
+  }
+
+
+  plagueDoctors(disabledTiles) {
+    return this.state.tiles.map(function({ x, y, zIndex }) {
+      if (disabledTiles[x + '_' + y]) {
+        const key = 'plague_doctor_' + x + '_' + y;
+        const style = {
+          left: Math.round(this.props.originX + (distanceBetweenOriginsX * (x - y) * scale) - (plagueDoctorImageWidth / 2 * scale)),
+          top: Math.round(this.props.originY - (distanceBetweenOriginsY / 2 * (x + y) * scale) - (90 * scale)),
+          width: Math.round(plagueDoctorImageWidth * scale),
+          zIndex: zIndex + 300
+        }
+        return <img key={key} src={'/images/items/item_plague_doctor.png'} style={style} draggable='false' />;
+      }
+      else return null;
+    }.bind(this));
   }
 
 
@@ -204,7 +233,7 @@ class Badge extends React.Component {
       top: Math.round(this.props.originY - (distanceBetweenOriginsY / 2 * (this.props.x + this.props.y) * scale) - (badgeHitboxTopShift * scale)),
       width: Math.round(badgeHitboxWidth * scale),
       height: Math.round(badgeHitboxHeight * scale),
-      zIndex: 200000000,
+      zIndex: this.props.zIndex + 250000000,
     };
 
     return <div className={classes} style={style} onClick={this.props.isActive ? this.badgeClicked : null}>
@@ -214,7 +243,7 @@ class Badge extends React.Component {
 
 
   badgeClicked() {
-    this.props.onTileDisabling({ x: this.props.x, y: this.props.y })
+    this.props.onBadgeClick({ x: this.props.x, y: this.props.y });
   }
 }
 
@@ -225,8 +254,21 @@ function Item({ x, y, item, offsetX, offsetY, originX, originY }) {
     left: Math.round(originX + (distanceBetweenOriginsX * (x - y) * scale) - (itemImageWidth/2*scale*itemScale) + (offsetX * itemScale * scale)),
     top: Math.round(originY - (distanceBetweenOriginsY / 2 * (x + y) * scale) - (itemImageWidth/2*scale*itemScale) + (offsetY * itemScale * scale)),
     width: Math.round(itemImageWidth * itemScale * scale),
-    zIndex: 100000000
+    zIndex: 205000000
   };
 
   return <img src={'/images/items/item_' + item + '.png'} style={style} draggable='false' className={classes} />
+}
+
+
+function parseTile(tileAsString) {
+  return tileAsString.split('_').map(i => parseInt(i));
+}
+
+
+function objectFromArray(array) {
+  return array.reduce(function(acc, item) {
+    acc[item] = true;
+    return acc;
+  }, {});
 }

@@ -77,7 +77,7 @@ defmodule Diggers.PlayerMoves do
 
 
   def try_to_end_round(game) do
-    if game.phase == "exploration" and Enum.all?(game.actions_this_round) do
+    if game.phase == "exploration" and Diggers.Game.all_players_acted?(game) do
       %Diggers.NextExplorationRoundStarted{game_id: game.game_id}
     end
   end

@@ -206,6 +206,20 @@ body {
 .container.lobby .slots .slot.self { color: #ffcc00; }
 
 
+.container .rolled-dices {
+  position: absolute;
+  right: 124px;
+  top: -20px;
+}
+.container .rolled-dices .dice.disabled { opacity: 0.5; }
+
+.container .lifes {
+  position: absolute;
+  right: 430px;
+  top: -20px;
+}
+.container .lifes .life.lost { opacity: 0.5; }
+
 
 .container .help-message {
   position: absolute;

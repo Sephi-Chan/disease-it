@@ -41,7 +41,15 @@ defmodule DiggersWeb.GameChannel do
 
 
   def handle_in("player_rolls_dices", _params, socket) do
-    Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: socket.assigns.game_id, dices_rolls: Diggers.Dice.roll(4)})
+    game = Diggers.GamesStore.game(socket.assigns.game_id)
+    max_dices_count = Diggers.Game.max_dices_count(game)
+    IO.inspect Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: socket.assigns.game_id, dices_rolls: Diggers.Dice.roll(max_dices_count)})
+    {:reply, {:ok, %{}}, socket}
+  end
+
+
+  def handle_in("player_moves", params, socket) do
+    Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: socket.assigns.game_id, player_id: socket.assigns.player_id, tile: params["tile"]})
     {:reply, {:ok, %{}}, socket}
   end
 

@@ -32,3 +32,11 @@ La partie s'arrête quand tous les joueurs sont sortis ou tous éliminés ou bie
 A chaque fois qu'un joueur atteint la case d'arrivée, un dé de moins est lancé au début de chaque tour (jusqu'à un minimum de 1 dé).
 
 - PlayerMoves : un joueur se déplace de sa case actuelle vers une case adjacente qui porte le nombre affiché par un des dés.
+
+
+
+Pitch :
+C'est un jeu qui se joue de 2 à 4, et inspiré d'un jeu de plateau et qui se joue dans le navigateur.
+On y incarne une maladie (le thème de la jam, c'est "Contamination"). On part tous du navire échoué (en bas à gauche) et il faut rejoindre le port (en haut à droite). Il faut passer par le plus de campements humains possible.
+En début de partie, chaque joueur désactive quelques cases sur le plateau de jeux des camarades, et les plateaux sont distribués aléatoirement et la partie commence réellement.
+Ensuite, à chaque tour quatre dés sont lancés, et tu ne peux aller que sur une case adjacente à la tienne et qui porte un numéro donné par les dés : si tu ne peux pas, ta maladie perd en létalité (c'est une façon de perdre). Les premiers arrivés au port sont récompensés et enlèvent un dé (du coup ça met la pression à ceux qui n'ont pas fini puisqu'ils ont plus de chance de ne pas pouvoir se déplacer de case en case et donc perdre).

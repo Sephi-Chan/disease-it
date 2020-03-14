@@ -58,6 +58,7 @@ defmodule Diggers.PlayerRollsDices do
 
   def try_to_end_round(game) do
     if game.phase == "exploration" and Diggers.Game.all_players_suffocated?(game) do
+      IO.puts("NextExplorationRoundStarted")
       %Diggers.NextExplorationRoundStarted{game_id: game.game_id}
     end
   end
