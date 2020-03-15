@@ -123,7 +123,6 @@ export default class Game extends React.Component {
 
 
   nextExplorationRoundStarted(game) {
-    window.sounds.horn.play();
     this.updateGame(game);
   }
 }
