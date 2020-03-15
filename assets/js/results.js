@@ -24,12 +24,13 @@ export default class Results extends React.Component {
   scores(currentPlayerId) {
     return <table>
       <tbody>
-        {this.props.game.winners.map(function({playerId, score}, index) {
+        {this.props.game.winners.map(function({playerId, score}) {
+          const indexInGame = this.props.game.players.indexOf(playerId)
           return <tr key={playerId} className={playerId == currentPlayerId ? 'self' : null}>
-            <td>{diseases[index]}</td>
+            <td>{diseases[indexInGame]}</td>
             <td>{score} points</td>
           </tr>;
-        })}
+        }.bind(this))}
       </tbody>
     </table>;
   }
