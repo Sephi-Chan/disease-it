@@ -32,6 +32,7 @@ defmodule Diggers.PlayerRollsDices do
 
   defp try_to_suffocate_players(game) do
     game.players
+      |> Enum.reject(&Diggers.Game.player_left?(game, &1))
       |> Enum.filter(fn (player_id) -> Enum.empty?(Diggers.Game.available_tiles_for_player(game, player_id)) end)
       |> Enum.map(fn (player_id) -> %Diggers.PlayerSuffocated{game_id: game.game_id, player_id: player_id} end)
   end
