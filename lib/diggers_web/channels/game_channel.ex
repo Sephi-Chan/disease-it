@@ -7,8 +7,10 @@ defmodule DiggersWeb.GameChannel do
 
     cond do
       game && game.phase == "lobby" ->
+        Diggers.CommandedApplication.dispatch(%Diggers.PlayerJoinsLobby{game_id: game.game_id, player_id: socket.assigns.player_id}, consistency: :strong)
+        game_after = Diggers.GamesStore.game(game_id)
         TaskAfter.cancel_task_after({Diggers.PlayerLeavesLobby, game_id, socket.assigns.player_id})
-        {:ok, game, assign(socket, :game_id, game_id)}
+        {:ok, game_after, assign(socket, :game_id, game_id)}
 
       game && game.phase != "lobby" && Enum.member?(game.players, socket.assigns.player_id)->
         {:ok, game, assign(socket, :game_id, game_id)}
@@ -16,15 +18,6 @@ defmodule DiggersWeb.GameChannel do
       true ->
         {:error, %{reason: "unauthorized"}}
     end
-  end
-
-
-  def handle_in("open_lobby", _params, socket) do
-    game_id = UUID.uuid4()
-    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerOpensLobby{game_id: game_id, player_id: socket.assigns.player_id})
-    response = %{"game_id" => game_id}
-
-    {:reply, {:ok, response}, socket}
   end
 
 
@@ -43,7 +36,7 @@ defmodule DiggersWeb.GameChannel do
   def handle_in("player_rolls_dices", _params, socket) do
     game = Diggers.GamesStore.game(socket.assigns.game_id)
     max_dices_count = Diggers.Game.max_dices_count(game)
-    IO.inspect Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: socket.assigns.game_id, dices_rolls: Diggers.Dice.roll(max_dices_count)})
+    Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: socket.assigns.game_id, dices_rolls: Diggers.Dice.roll(max_dices_count)})
     {:reply, {:ok, %{}}, socket}
   end
 
