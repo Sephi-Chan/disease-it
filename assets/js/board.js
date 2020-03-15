@@ -107,7 +107,8 @@ export default class Board extends React.Component {
   items() {
     return this.props.items.map((function(item){
       const key = 'item_' + item.x + '_' + item.y + '_' + item.offsetX + '_' + item.offsetY;
-      return <Item key={key} {...item} originX={this.state.originX} originY={this.state.originY} />;
+      const alreadyVisited = this.props.game && this.props.game[this.props.playerId].path.includes(item.x + '_' + item.y);
+      return <Item key={key} {...item} originX={this.state.originX} originY={this.state.originY} alreadyVisited={alreadyVisited} />;
     }).bind(this));
   }
 
@@ -247,8 +248,8 @@ class Badge extends React.Component {
 }
 
 
-function Item({ x, y, item, offsetX, offsetY, originX, originY }) {
-  const classes = [ 'item', item ].join(' ')
+function Item({ x, y, item, offsetX, offsetY, originX, originY, alreadyVisited }) {
+  const classes = [ 'item', item, alreadyVisited ? 'visited' : null ].join(' ')
   const style = {
     left: Math.round(originX + (distanceBetweenOriginsX * (x - y) * scale) - (itemImageWidth/2*scale*itemScale) + (offsetX * itemScale * scale)),
     top: Math.round(originY - (distanceBetweenOriginsY / 2 * (x + y) * scale) - (itemImageWidth/2*scale*itemScale) + (offsetY * itemScale * scale)),
