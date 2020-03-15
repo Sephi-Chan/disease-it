@@ -234,9 +234,8 @@ defmodule DiggersTest do
     {:error, :not_allowed_now} = Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: "game_1", dices_rolls: [2, 2, 4, 5]})
     {:error, :not_allowed_now} = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Mandor", tile: "9_9"})
     assert Diggers.GamesStore.game("game_1").phase == "results"
-    assert Diggers.GamesStore.game("game_1").winners == [%{"player_id" => "Corwin", "score" => 16}, %{"player_id" => "Mandor", "score" => 8}]
-
-    [{16, "Corwin"}, {8, "Mandor"}] = Diggers.Game.winners(game())
+    assert Diggers.GamesStore.game("game_1").winners == [%{"player_id" => "Corwin", "score" => 12}, %{"player_id" => "Mandor", "score" => 7}]
+    [{12, "Corwin"}, {7, "Mandor"}] = Diggers.Game.winners(game())
   end
 
 
@@ -293,8 +292,14 @@ defmodule DiggersTest do
     :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Mandor", tile: "1_1"})
     :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: "game_1", dices_rolls: [6, 6, 6]}) # Mandor suffocates.
     :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: "game_1", dices_rolls: [1, 2, 3]})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Mandor", tile: "1_2"})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: "game_1", dices_rolls: [1]})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: "game_1", dices_rolls: [1]})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: "game_1", dices_rolls: [1]})
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: "game_1", dices_rolls: [1]})
 
-    [{10, "Corwin"}] = Diggers.Game.winners(game())
+    assert Diggers.GamesStore.game("game_1").phase == "results"
+    [{6, "Corwin"}] = Diggers.Game.winners(game())
   end
 
 
@@ -330,6 +335,7 @@ defmodule DiggersTest do
     :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Corwin", tile: "3_2"})
     :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: "game_1", dices_rolls: [2, 2, 2, 2]})
 
+    assert Diggers.GamesStore.game("game_1").phase == "results"
     [] = Diggers.Game.winners(game())
   end
 
@@ -374,7 +380,8 @@ defmodule DiggersTest do
     :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: "game_1", dices_rolls: [2, 3, 5, 6]})
     :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerMoves{game_id: "game_1", player_id: "Corwin", tile: "9_9"})
 
-    [{10, "Corwin"}] = Diggers.Game.winners(game())
+    assert Diggers.GamesStore.game("game_1").phase == "results"
+    [{6, "Corwin"}] = Diggers.Game.winners(game())
   end
 
 

@@ -195,6 +195,14 @@ defmodule Diggers.Game do
   end
 
 
+  def all_players_left_or_died?(game) do
+    game.players
+      |> Enum.reject(&player_died?(game, &1))
+      |> Enum.reject(&player_left?(game, &1))
+      |> Enum.empty?
+  end
+
+
   def winners_bis(game) do
     Enum.map(winners(game), fn ({score, player_id}) ->
       %{player_id: player_id, score: score}
