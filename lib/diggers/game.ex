@@ -164,7 +164,7 @@ defmodule Diggers.Game do
 
 
   defp exit_bonuses(gone_players) do
-    bonuses = %{0 => 10, 1 => 5, 2 => 2}
+    bonuses = %{0 => 6, 1 => 4, 2 => 2}
     exit_rounds_with_index = Map.values(gone_players) |> Enum.uniq |> Enum.sort |> Enum.with_index
     bonus_by_exit_round = Enum.reduce(exit_rounds_with_index, %{}, fn ({exit_round, index}, memo) -> Map.put(memo, exit_round, Map.get(bonuses, index, 0)) end)
 
