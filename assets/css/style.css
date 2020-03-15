@@ -5,7 +5,10 @@ body {
   font-family: Georgia, 'Times New Roman', Times, serif;
   color: #fff;
   user-select: none;
-  overflow: hidden;
+}
+
+body.light .container * {
+  animation: none !important;
 }
 
 #toggle-music-button {
@@ -16,7 +19,29 @@ body {
   transform: scale(0.5);
   cursor: pointer;
   transition: all 0.3s;
+  z-index: 220000000;
 }
+
+
+#toggle-hd-button {
+  transform-origin: 67px 85px;
+  position: absolute;
+  top: -65px;
+  right: 36px;
+  transform: scale(0.5);
+  cursor: pointer;
+  transition: all 0.3s;
+  z-index: 220000000;
+}
+
+
+#toggle-music-button:hover { transform: scale(0.55) rotate(-15deg); }
+#toggle-music-button:active { transform: scale(0.5); }
+#toggle-music-button.muted { opacity: 0.5; }
+
+#toggle-hd-button:hover { transform: scale(0.55) rotate(-15deg); }
+#toggle-hd-button:active { transform: scale(0.5); }
+#toggle-hd-button.muted { opacity: 0.5; }
 
 
 #bottom-bar {
@@ -31,9 +56,6 @@ body {
 #bottom-bar a:hover { color: #999 }
 #bottom-bar a:active { color: #ccc }
 
-#toggle-music-button:hover { transform: scale(0.55) rotate(-15deg); }
-#toggle-music-button:active { transform: scale(0.5); }
-#toggle-music-button.muted { opacity: 0.5; }
 
 #game {
   position: absolute;

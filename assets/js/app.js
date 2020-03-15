@@ -8,6 +8,7 @@ import camelCase from './camelcaser';
 import Home from './home';
 import Lobby from './lobby';
 import Game from './game';
+import LightModeButton from './light_mode_button';
 import BackgroundMusic from './background_music';
 import Push from './push';
 import _ from './prefetch';
@@ -28,6 +29,7 @@ class App extends React.Component {
       <div id="bottom-bar">
         <a href="https://sephi-chan.itch.io/disease-it">itch.io</a> · <a href="https://github.com/Sephi-Chan/disease-it">github</a>
       </div>
+      <LightModeButton />
       <BackgroundMusic />
     </React.Fragment>;
   }

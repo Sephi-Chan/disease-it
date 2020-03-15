@@ -59,12 +59,12 @@ export default class DisablingPhase extends React.Component {
 
       <p>Chaque joueur dispose d'un plateau de jeu.</p>
       <p>
-        Pour <span>corser la partie</span>, chaque joueur va rendre <span>trois cases inaccessible</span> sur chaque plateau.
-        Les plateaux seront distribués <span>aléatoirement</span> aux joueurs en début de partie !
+        Pour <span>corser la partie</span>, chaque joueur va bloquer <span>trois cases</span> sur chaque plateau.
+        Les plateaux seront distribués <span>aléatoirement</span> aux joueurs au début de la partie !
       </p>
       <p>
-        La case de <span>départ</span> et les cases contenant un <span>lieu de vie humaine</span> ne peuvent pas être désactivées.
-        Deux <span>cases adjacentes</span> ne peuvent pas être désactivées.
+        La case de <span>départ</span> et les cases contenant un <span>lieu de vie humaine</span> ne peuvent pas être bloquées.
+        Deux <span>cases adjacentes</span> ne peuvent pas être bloquées.
       </p>
 
       {this.remainingDisablingsSentence()}

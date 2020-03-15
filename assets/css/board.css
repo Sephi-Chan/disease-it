@@ -44,7 +44,10 @@
 
 
 #map .item { position: absolute; }
-#map .item.ship { animation: ship 0.8s infinite alternate; }
+#map .item.ship {
+  transform-origin: 67px 40px;
+  animation: ship 0.8s infinite alternate;
+}
 #map .item.visited { filter: grayscale(1); }
 
 #map .waves .wave-1 { position: absolute; animation: waves 1.4s infinite alternate; z-index: 100000; }
@@ -55,13 +58,13 @@
 
 @keyframes waves {
   0% { transform: translate(0, 0); }
-  100% { transform: translate(-2px, 0); }
+  100% { transform: translate(-2px, 0) rotate(0.1deg); }
 }
 
 
 @keyframes ship {
-  0% { transform: scale(-1, 1) rotate(0deg) translate(0, 2px); }
-  100% { transform: scale(-1, 1) rotate(5deg) translate(0, 0) }
+  0% { transform: rotate(0deg) translate(0, 1px); }
+  100% { transform: rotate(-5deg) translate(0, 0) }
 }
 
 @keyframes shoreline {
@@ -76,7 +79,7 @@
 @keyframes shoreline-north-east { 0% { transform: translate(-2px, 2px) rotate(0.1deg); } }
 @keyframes shoreline-south-east { 0% { transform: translate(-2px, -2px) rotate(0.1deg); } }
 
-#map .shoreline { z-index: auto; }
+#map .shoreline { opacity: 0.8; z-index: auto; }
 #map .shoreline.north { animation: shoreline-north 1.8s infinite alternate, shoreline 1s infinite alternate; }
 #map .shoreline.south { animation: shoreline-south 1.7s infinite alternate, shoreline 1s infinite alternate; }
 #map .shoreline.north_west { animation: shoreline-north-west 1.4s infinite alternate, shoreline 1s infinite alternate; }
