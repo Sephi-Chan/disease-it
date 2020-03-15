@@ -67,14 +67,14 @@ defmodule Diggers.PlayerDisablesTile do
 
   defp all_players_disabled_three_tiles_this_round?(game) do
     Enum.all?(game.disabled_tiles_this_round, fn ({_board_index, disabled_tiles}) ->
-      Enum.count(disabled_tiles) == 3
+      Enum.count(disabled_tiles) == Diggers.Tile.tiles_to_disable_for_players_count(Enum.count(game.players))
     end)
   end
 
 
   defp all_tiles_have_been_disabled?(game) do
     Enum.all?(game.disabled_tiles, fn ({_board_index, disabled_tiles}) ->
-      Enum.count(disabled_tiles) == 3 * Enum.count(game.players)
+      Enum.count(disabled_tiles) == Diggers.Tile.tiles_to_disable_for_players_count(Enum.count(game.players)) * Enum.count(game.players)
     end)
   end
 

@@ -16,4 +16,9 @@ defmodule Diggers.Tile do
     player_indexes = 0..(Enum.count(players) - 1)
     Enum.reduce(player_indexes, %{}, fn (index, disabled_tiles) -> Map.put(disabled_tiles, index, []) end)
   end
+
+
+  def tiles_to_disable_for_players_count(2) do 3 end 
+  def tiles_to_disable_for_players_count(3) do 2 end 
+  def tiles_to_disable_for_players_count(4) do 1 end 
 end

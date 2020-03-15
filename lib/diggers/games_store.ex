@@ -138,7 +138,7 @@ defmodule Diggers.GamesStore do
       |> Enum.reduce(state[game_id], fn ({player_id, board_index}, acc) ->
         Map.put(acc, player_id, %{
           board_index: board_index,
-          tiles_to_disable: 3,
+          tiles_to_disable: Diggers.Tile.tiles_to_disable_for_players_count(Enum.count(state[game_id].players)),
           lifes: 5,
           current_round: nil,
           path: [Diggers.Tile.dump(start_tile)]
@@ -166,7 +166,7 @@ defmodule Diggers.GamesStore do
     game_state =
       Enum.reduce(players_boards, state[game_id], fn ({player_id, board_index}, acc) ->
         acc
-          |> put_in([player_id, :tiles_to_disable], 3)
+          |> put_in([player_id, :tiles_to_disable], Diggers.Tile.tiles_to_disable_for_players_count(Enum.count(state[game_id].players)))
           |> put_in([player_id, :board_index], board_index)
       end)
 

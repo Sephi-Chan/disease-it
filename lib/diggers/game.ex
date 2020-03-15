@@ -64,7 +64,7 @@ defmodule Diggers.Game do
   def can_disable_more_tiles?(game, player_id) do
     board_index = board_of_player(game, player_id)
     disabled_tiles = game.disabled_tiles_this_round[board_index]
-    Enum.count(disabled_tiles) < 3
+    Enum.count(disabled_tiles) < Diggers.Tile.tiles_to_disable_for_players_count(Enum.count(game.players))
   end
 
 
