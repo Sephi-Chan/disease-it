@@ -24,6 +24,11 @@
   opacity: 0.9;
 }
 
+#map.exploration  .badge.active {
+  transform-origin: 67px 85px;
+  animation: pulsating 0.4s infinite alternate;
+}
+
 #map .badge.active img {
   transition: all 0.1s;
 }
@@ -33,9 +38,14 @@
   transform: translate(0, -5px);
   opacity: 1;
 }
+#map.exploration .badge.active:hover img {
+  transform: translate(0, 0);
+}
+
 
 #map .item { position: absolute; }
 #map .item.ship { animation: ship 0.8s infinite alternate; }
+#map .item.visited { filter: grayscale(1) }
 
 
 
