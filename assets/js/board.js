@@ -70,6 +70,7 @@ export default class Board extends React.Component {
       return this.neighboursOf(tile).map(neighbour => disabledTiles[neighbour]).filter(Boolean).length == 0;
     }
     else if (this.props.game && this.props.game.phase == 'exploration') {
+      if (this.props.game.gonePlayers.includes(this.props.playerId)) return false;
       if (this.props.game[this.props.playerId].currentRound != null) return false;
       return neighbourTiles.filter(tile => !disabledTiles[tile]).indexOf(tile) != -1
         && (this.props.game.dicesRolls || []).indexOf(acceptedRolls[0]) != -1;
