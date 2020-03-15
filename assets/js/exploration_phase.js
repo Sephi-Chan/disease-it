@@ -16,9 +16,6 @@ export default class ExplorationPhase extends React.Component {
   render() {
     const player = this.props.game[this.props.playerId];
     const isGone = this.props.game.gonePlayers.indexOf(this.props.playerId) != -1;
-    console.log(this.props.game);
-    console.log(player);
-
 
     return <React.Fragment>
       {this.state.showInstructions && this.instructionsContainer(player, isGone)}

@@ -14,11 +14,11 @@ function preloadSound([ id, url ]) {
 
 setTimeout(function () {
   [
-    "/images/ui/lobby/start-game.png",
   ].map(preloadImage);
 
   [
     [ 'horn', '/audio/horn.mp3' ],
-    [ 'dices_roll', '/audio/dices_roll.mp3' ],
+    [ 'dicesRoll', '/audio/dices_roll.mp3' ],
+    [ 'crowdPanic', '/audio/crowd-panic.mp3' ],
   ].map(preloadSound);
 }, 500);

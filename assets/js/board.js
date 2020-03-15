@@ -1,5 +1,4 @@
 import React from 'react';
-import { LongPoll } from 'phoenix';
 
 const scale = 3/4;
 const itemScale = 4/5;

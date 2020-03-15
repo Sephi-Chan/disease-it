@@ -88,7 +88,7 @@ defmodule Diggers.GameReadModelBuilder do
 
   def handle(event = %Diggers.PlayerMoved{}, _metadata) do
     game = Diggers.GamesStore.player_moved(event.game_id, event.player_id, event.tile)
-    DiggersWeb.Endpoint.broadcast!("game:#{event.game_id}", "player_moved", game)
+    DiggersWeb.Endpoint.broadcast!("game:#{event.game_id}", "player_moved", %{game: game, playerId: event.player_id, tile: event.tile})
     :ok
   end
 

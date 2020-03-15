@@ -5,12 +5,16 @@ import GameOver from './game_over';
 import Results from './results';
 import Push from './push';
 import camelCase from './camelcaser';
+import { items } from './map';
 
 
 export default class Game extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { game: props.game };
+    this.state = {
+      game: props.game,
+      itemPerTile: objectFromArray(items.map(({x, y}) => x + '_' + y))
+    };
     this.updateGame = this.updateGame.bind(this);
     this.nextDisablingRoundStarted = this.nextDisablingRoundStarted.bind(this);
     this.explorationPhaseStarted = this.explorationPhaseStarted.bind(this);
@@ -49,14 +53,11 @@ export default class Game extends React.Component {
 
 
   getPhaseScene(game) {
-    const playerBoardIndex = this.state.game[this.props.playerId].boardIndex;
-    const disabledTilesByPlayer = this.state.game.disabledTiles[playerBoardIndex];
-
     if (game.phase == 'disabling') {
-      return <DisablingPhase {...this.props} game={game} disabledTilesByPlayer={disabledTilesByPlayer} />
+      return <DisablingPhase {...this.props} game={game} />
     }
     else if (game.phase == 'exploration') {
-      return <ExplorationPhase {...this.props} game={game} disabledTilesByPlayer={disabledTilesByPlayer} updateGame={this.updateGame} />
+      return <ExplorationPhase {...this.props} game={game} updateGame={this.updateGame} />
     }
     else if (game.phase == 'results') {
       if (game.winners.length == 0) {
@@ -75,12 +76,15 @@ export default class Game extends React.Component {
 
 
   diceRolled(game) {
-    window.sounds.dices_roll.play();
+    window.sounds.dicesRoll.play();
     this.updateGame(game);
   }
 
 
-  playerMoved(game) {
+  playerMoved({tile, playerId, game}) {
+    const tileHasItem = !!this.state.itemPerTile[tile];
+    const tileWasVisited = this.state.game[playerId].path.includes(tile);
+    if (tileHasItem && !tileWasVisited) window.sounds.crowdPanic.play();
     this.updateGame(game);
   }
 
@@ -121,4 +125,12 @@ export default class Game extends React.Component {
     window.sounds.horn.play();
     this.updateGame(game);
   }
+}
+
+
+function objectFromArray(array) {
+  return array.reduce(function(acc, item) {
+    acc[item] = true;
+    return acc;
+  }, {});
 }
