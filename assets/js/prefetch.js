@@ -13,12 +13,12 @@ function preloadSound([ id, url ]) {
 
 
 setTimeout(function () {
-  [
-  ].map(preloadImage);
+  [].map(preloadImage);
 
   [
     [ 'horn', '/audio/horn.mp3' ],
-    [ 'dicesRoll', '/audio/dices_roll.mp3' ],
+    [ 'dicesRoll', '/audio/dices-roll.mp3' ],
     [ 'crowdPanic', '/audio/crowd-panic.mp3' ],
+    [ 'shipBell', '/audio/ship-bell.mp3' ],
   ].map(preloadSound);
 }, 500);

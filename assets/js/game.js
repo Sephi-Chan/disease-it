@@ -95,6 +95,7 @@ export default class Game extends React.Component {
 
 
   playerLeft(game) {
+    window.sounds.shipBell.play();
     this.updateGame(game);
   }
 
