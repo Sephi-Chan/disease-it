@@ -45,12 +45,13 @@
 
 #map .item { position: absolute; }
 #map .item.ship { animation: ship 0.8s infinite alternate; }
-#map .item.visited { filter: grayscale(1) }
+#map .item.visited { filter: grayscale(1); }
 
-#map .waves .wave-1 { animation: waves 1.4s infinite alternate; }
-#map .waves .wave-2 { animation: waves 1.6s infinite alternate; }
-#map .waves .wave-3 { animation: waves 1.5s infinite alternate; }
-#map .waves .wave-4 { animation: waves 1.3s infinite alternate; }
+#map .waves .wave-1 { position: absolute; animation: waves 1.4s infinite alternate; z-index: 100000; }
+#map .waves .wave-1 { animation: waves 1.4s infinite alternate; z-index: 100000; }
+#map .waves .wave-2 { animation: waves 1.6s infinite alternate; z-index: 100000; }
+#map .waves .wave-3 { animation: waves 1.5s infinite alternate; z-index: 100000; }
+#map .waves .wave-4 { animation: waves 1.3s infinite alternate; z-index: 100000; }
 
 @keyframes waves {
   0% { transform: translate(0, 0); }

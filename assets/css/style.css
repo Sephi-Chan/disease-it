@@ -198,6 +198,7 @@ body {
 
 .container .rolled-dices {
   position: absolute;
+  z-index: 200000;
   right: 124px;
   top: -20px;
 }
@@ -205,6 +206,7 @@ body {
 
 .container .lifes {
   position: absolute;
+  z-index: 200000;
   right: 430px;
   top: -20px;
 }
@@ -216,6 +218,7 @@ body {
   animation: bounce 0.4s infinite alternate;
   font-style: italic;
   width: 300px;
+  z-index: 200000;
 }
 .container .help-message.origin { top: 740px; left: 120px; }
 .container .help-message.destination { top: 50px; left: 1130px; }

@@ -65,21 +65,21 @@ export default class Board extends React.Component {
 
   ocean() {
     return <div className="waves">
-      <img src="/images/tiles/tile_ocean_1.png" width={hexagonWidth * scale} className="wave-1" style={{position: 'absolute', left: -40, top: 390 }} draggable="false" />
-      <img src="/images/tiles/tile_ocean_2.png" width={hexagonWidth * scale} className="wave-2" style={{position: 'absolute', left: 80, top: 620 }} draggable="false" />
-      <img src="/images/tiles/tile_ocean_15.png" width={hexagonWidth * scale} className="wave-4" style={{position: 'absolute', left: 300, top: 670 }} draggable="false" />
-      <img src="/images/tiles/tile_ocean_6.png" width={hexagonWidth * scale} className="wave-3" style={{position: 'absolute', left: 645, top: 670 }} draggable="false" />
-      <img src="/images/tiles/tile_ocean_17.png" width={hexagonWidth * scale} className="wave-2" style={{position: 'absolute', left: 990, top: 665 }} draggable="false" />
-      <img src="/images/tiles/tile_ocean_0.png" width={hexagonWidth * scale} className="wave-1" style={{position: 'absolute', left: 1200, top: 600 }} draggable="false" />
-      <img src="/images/tiles/tile_ocean_1.png" width={hexagonWidth * scale} className="wave-1" style={{position: 'absolute', left: 1225, top: 375 }} draggable="false" />
-      <img src="/images/tiles/tile_ocean_8.png" width={hexagonWidth * scale} className="wave-3" style={{position: 'absolute', left: 1230, top: 60 }} draggable="false" />
-      <img src="/images/tiles/tile_ocean_8.png" width={hexagonWidth * scale} className="wave-4" style={{position: 'absolute', left: 1110, top: -100 }} draggable="false" />
-      <img src="/images/tiles/tile_ocean_6.png" width={hexagonWidth * scale} className="wave-2" style={{position: 'absolute', left: 900, top: -160 }} draggable="false" />
-      <img src="/images/tiles/tile_ocean_10.png" width={hexagonWidth * scale} className="wave-4" style={{position: 'absolute', left: 620, top: -130 }} draggable="false" />
-      <img src="/images/tiles/tile_ocean_0.png" width={hexagonWidth * scale} className="wave-1" style={{position: 'absolute', left: 450, top: -60 }} draggable="false" />
-      <img src="/images/tiles/tile_ocean_6.png" width={hexagonWidth * scale} className="wave-2" style={{position: 'absolute', left: 360, top: 55 }} draggable="false" />
-      <img src="/images/tiles/tile_ocean_17.png" width={hexagonWidth * scale} className="wave-3" style={{position: 'absolute', left: 145, top: 125 }} draggable="false" />
-      <img src="/images/tiles/tile_ocean_15.png" width={hexagonWidth * scale} className="wave-1" style={{position: 'absolute', left: -55, top: 190 }} draggable="false" />
+      <img src="/images/tiles/tile_ocean_1.png" width={hexagonWidth * scale} className="wave-1" style={{left: -40, top: 390 }} draggable="false" />
+      <img src="/images/tiles/tile_ocean_2.png" width={hexagonWidth * scale} className="wave-2" style={{left: 20, top: 640 }} draggable="false" />
+      <img src="/images/tiles/tile_ocean_15.png" width={hexagonWidth * scale} className="wave-4" style={{left: 300, top: 670 }} draggable="false" />
+      <img src="/images/tiles/tile_ocean_6.png" width={hexagonWidth * scale} className="wave-3" style={{left: 645, top: 670 }} draggable="false" />
+      <img src="/images/tiles/tile_ocean_17.png" width={hexagonWidth * scale} className="wave-2" style={{left: 990, top: 665 }} draggable="false" />
+      <img src="/images/tiles/tile_ocean_0.png" width={hexagonWidth * scale} className="wave-1" style={{left: 1200, top: 600 }} draggable="false" />
+      <img src="/images/tiles/tile_ocean_1.png" width={hexagonWidth * scale} className="wave-1" style={{left: 1225, top: 375 }} draggable="false" />
+      <img src="/images/tiles/tile_ocean_8.png" width={hexagonWidth * scale} className="wave-3" style={{left: 1230, top: 60 }} draggable="false" />
+      <img src="/images/tiles/tile_ocean_8.png" width={hexagonWidth * scale} className="wave-4" style={{left: 1110, top: -100 }} draggable="false" />
+      <img src="/images/tiles/tile_ocean_6.png" width={hexagonWidth * scale} className="wave-2" style={{left: 900, top: -160 }} draggable="false" />
+      <img src="/images/tiles/tile_ocean_10.png" width={hexagonWidth * scale} className="wave-4" style={{left: 620, top: -130 }} draggable="false" />
+      <img src="/images/tiles/tile_ocean_0.png" width={hexagonWidth * scale} className="wave-1" style={{left: 450, top: -60 }} draggable="false" />
+      <img src="/images/tiles/tile_ocean_6.png" width={hexagonWidth * scale} className="wave-2" style={{left: 360, top: 55 }} draggable="false" />
+      <img src="/images/tiles/tile_ocean_17.png" width={hexagonWidth * scale} className="wave-3" style={{left: 145, top: 125 }} draggable="false" />
+      <img src="/images/tiles/tile_ocean_15.png" width={hexagonWidth * scale} className="wave-1" style={{left: -55, top: 190 }} draggable="false" />
     </div>
   }
 
