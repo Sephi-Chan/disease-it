@@ -221,7 +221,7 @@ body.light .container * {
 .container .rolled-dices {
   position: absolute;
   z-index: 200000;
-  right: 124px;
+  right: 165px;
   top: -20px;
 }
 .container .rolled-dices .dice.disabled { opacity: 0.5; }
@@ -229,7 +229,7 @@ body.light .container * {
 .container .lifes {
   position: absolute;
   z-index: 200000;
-  right: 430px;
+  right: 450px;
   top: -20px;
 }
 .container .lifes .life.lost { opacity: 0.5; }
