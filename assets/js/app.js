@@ -25,6 +25,9 @@ class App extends React.Component {
   render() {
     return <React.Fragment>
       {this.getScene(this.state.gameId || this.props.gameId, this.state.game)}
+      <div id="bottom-bar">
+        <a href="https://sephi-chan.itch.io/disease-it">itch.io</a> · <a href="https://github.com/Sephi-Chan/disease-it">github</a>
+      </div>
       <BackgroundMusic />
     </React.Fragment>;
   }
