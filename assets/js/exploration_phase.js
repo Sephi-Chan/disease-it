@@ -15,14 +15,15 @@ export default class ExplorationPhase extends React.Component {
 
   render() {
     const player = this.props.game[this.props.playerId];
-    const isGone = this.props.game.gonePlayers.indexOf(this.props.playerId) != -1;
+    const isGone = this.props.game.gonePlayers.includes(this.props.playerId);
+    const isLeader = this.props.game.players[0] == this.props.playerId;
 
     return <React.Fragment>
       {this.state.showInstructions && this.instructionsContainer(player, isGone)}
       {this.rolledDices()}
       {this.lifes()}
       <Board {...this.props} width={1440} height={900} tiles={tiles} items={items} originX={1440/2 + 50} originY={900/2 - 30} onBadgeClick={this.onTileClick} />
-      {isGone || this.diceRoller()}
+      {isLeader && this.diceRoller()}
     </React.Fragment>;
   }
 
