@@ -2,6 +2,7 @@ import React from 'react';
 import { tiles, items } from './map';
 import Board from './board';
 import Push from './push';
+import { diseases } from './diseases';
 
 
 export default class DisablingPhase extends React.Component {
@@ -40,7 +41,7 @@ export default class DisablingPhase extends React.Component {
 
   shortInstructions() {
     return <div className='instructions-container tiny'>
-      {this.remainingDisablingsSentence()}
+      {this.remainingDisablingsShortParagraph(this.props.playerId, this.props.game[this.props.playerId], this.props.game)}
     </div>;
   }
 
@@ -54,40 +55,62 @@ export default class DisablingPhase extends React.Component {
 
 
   fullInstructions() {
-    return <div className='instructions-container medium'>
+    const classes = ['instructions-container', 'disabling', this.props.game.players.length > 2 ? 'tallest' : 'tall' ].join(' ');
+    return <div className={classes}>
       <img src='/images/icons/icon_close.png' className='close' onClick={this.dismissInstructions} />
 
-      <p>Chaque joueur dispose d'un plateau de jeu.</p>
-      <p>
-        Pour <span>corser la partie</span>, chaque joueur va bloquer <span>trois cases</span> sur chaque plateau.
-        Les plateaux seront distribués <span>aléatoirement</span> aux joueurs au début de la partie !
-      </p>
-      <p>
-        La case de <span>départ</span> et les cases contenant un <span>lieu de vie humaine</span> ne peuvent pas être bloquées.
-        Deux <span>cases adjacentes</span> ne peuvent pas être bloquées.
-      </p>
+      <p>Chaque joueur dispose de <span>son propre plateau</span> de jeu.</p>
+      <p>Lors de cette première phrase, les plateaux de jeux vont <span>tourner</span> d'un joueur à l'autre, et chacun va <span>bloquer des cases</span> sur le plateau qu'il a en main.</p>
+      <p>L'opération recommence jusqu'à ce que chaque plateau soit passé par chaque joueur. Les plateaux sont alors distribués <span>aléatoirement</span> et la partie peut commmencer !</p>
+      <p>La case de <span>départ</span> et les cases contenant un <span>bâtiment</span> ne peuvent pas être bloquées. Deux <span>cases adjacentes</span> ne peuvent pas être bloquées.</p>
 
-      {this.remainingDisablingsSentence()}
+      {this.remainingDisablingsTable(this.props.playerId, this.props.game)}
     </div>;
   }
 
 
-  remainingDisablingsSentence() {
-    const player = this.props.game[this.props.playerId];
+  remainingDisablingsTable(currentPlayerId, game) {
+    return <table>
+      <tbody>
+        {game.players.map(function(playerId, index) {
+          const player = game[playerId];
+          return <tr key={playerId} className={playerId == currentPlayerId ? 'self' : null}>
+            <td>{diseases[index]}</td>
+            <td>
+              {player.tilesToDisable == 0 && <React.Fragment><span>En attente</span> de vos adversaires…</React.Fragment>}
+              {player.tilesToDisable == 1 && <React.Fragment>1 case à bloquer sur le plateau #{player.boardIndex + 1}</React.Fragment>}
+              {player.tilesToDisable > 1 && <React.Fragment>{player.tilesToDisable} cases à bloquer sur le plateau #{player.boardIndex + 1}</React.Fragment>}
+            </td>
+          </tr>;
+        })}
+      </tbody>
+    </table>;
+  }
 
-    if (player.tilesToDisable == 0) {
-      return <p><span>En attente</span> de vos adversaires…</p>;
+
+  remainingDisablingsShortParagraph(currentPlayerId, currentPlayer, game) {
+    const readyPlayerIds = game.players.filter(function(playerId) { return game[playerId].tilesToDisable == 0 });
+    const idsWithName = readyPlayerIds.map(function(playerId){ const indexInGame = game.players.indexOf(playerId); return [playerId, diseases[indexInGame] ]; });
+    const namesElements = idsWithName.map(function([playerId, name]) { return playerId == currentPlayerId ? <span className='self' key={name}>{name}</span> : name; });
+
+    if (readyPlayerIds.length == 0) {
+      if (currentPlayer.tilesToDisable > 1) return <p>Bloquez {currentPlayer.tilesToDisable} cases.</p>;
+      else if (currentPlayer.tilesToDisable == 1) return <p>Bloquez une dernière case.</p>;
     }
-    else if (player.tilesToDisable == 1) {
-      return <p><span>Cliquez</span> sur la dernière case à désactiver.</p>;
+    else if (readyPlayerIds.length == 1) {
+      if (readyPlayerIds[0] == currentPlayerId) return <p><span>Vous</span> êtes prêt.</p>;
+      else return <p>{namesElements} est prêt.</p>;
     }
     else {
-      if (this.state.showInstructions) {
-        return <p><span>Désactivez</span> {player.tilesToDisable} cases sur le plateau n°{player.boardIndex + 1} en cliquant dessus.</p>;
-      }
-      else {
-        return <p><span>Désactivez</span> {player.tilesToDisable} cases sur le plateau n°{player.boardIndex + 1}.</p>;
-      }
+      return <p>{intersperse(namesElements, ', ')} sont prêts.</p>;
     }
   }
+}
+
+
+function intersperse(array, separator) {
+  if (array.length === 0) return [];
+  return array.slice(1).reduce(function(xs, x, i) {
+    return xs.concat([separator, x]);
+  }, [array[0]]);
 }

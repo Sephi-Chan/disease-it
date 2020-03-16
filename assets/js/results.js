@@ -25,7 +25,7 @@ export default class Results extends React.Component {
     return <table>
       <tbody>
         {this.props.game.winners.map(function({playerId, score}) {
-          const indexInGame = this.props.game.players.indexOf(playerId)
+          const indexInGame = this.props.game.players.indexOf(playerId);
           return <tr key={playerId} className={playerId == currentPlayerId ? 'self' : null}>
             <td>{diseases[indexInGame]}</td>
             <td>{score} points</td>
@@ -37,15 +37,17 @@ export default class Results extends React.Component {
 
 
   paragraphs(playerId) {
+    const scoresByPlayerId = this.props.game.winners.reduce(function(acc, { playerId, score }) { acc[playerId] = score; return acc; }, {});
+    const bestScore = this.props.game.winners[0].score;
     const winnerIds = this.props.game.winners.map((winner) => winner.playerId);
 
-    if (winnerIds.indexOf(playerId) == -1) {
+    if (!winnerIds.includes(playerId)) {
       return this.youWereBeaten();
     }
     else {
       if (winnerIds.length == 1) { return this.youAreTheOnlyWinner(); }
       else {
-        if (winnerIds[0] == playerId) { return this.youAreTheBestAmongOthers(); }
+        if (winnerIds[0] == playerId || scoresByPlayerId[playerId] == bestScore) { return this.youAreTheBestAmongOthers(); }
         else { return this.youExitedTheIsland(); }
       }
     }
@@ -54,7 +56,7 @@ export default class Results extends React.Component {
 
   youWereBeaten() {
     return <React.Fragment>
-      <p>Vous n'avez <span>pas réussi</span> à quitter l'île… Vous êtes une maladie <span>médiocre</span>.</p>
+      <p>Vous n'avez <span>pas réussi</span> à quitter l'île… Vous êtes vraiment une maladie <span>médiocre</span>.</p>
       <p>Vous étiez <span>destiné</span> à de grandes choses. Quelle <span>déception</span>…</p>
       <p>Aujourd'hui, <span>personne</span> ne vous craint : vous êtes aussi <span>inoffensif</span> qu'un bébé chauve-souris.</p>
     </React.Fragment>;

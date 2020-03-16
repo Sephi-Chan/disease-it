@@ -50,7 +50,8 @@
 }
 #map .item.visited { filter: grayscale(1); }
 
-#map .waves .wave-1 { position: absolute; animation: waves 1.4s infinite alternate; z-index: 100000; }
+#map .waves { opacity: 0.9; }
+#map .waves .wave-1 { animation: waves 1.4s infinite alternate; z-index: 100000; }
 #map .waves .wave-1 { animation: waves 1.4s infinite alternate; z-index: 100000; }
 #map .waves .wave-2 { animation: waves 1.6s infinite alternate; z-index: 100000; }
 #map .waves .wave-3 { animation: waves 1.5s infinite alternate; z-index: 100000; }

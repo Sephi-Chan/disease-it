@@ -5,9 +5,8 @@ body {
   user-select: none;
 }
 
-body.light .container * {
-  animation: none !important;
-}
+body.light .wave { animation: none !important; }
+body.light .shoreline { animation: none !important; }
 
 #toggle-music-button {
   transform-origin: 67px 85px;
@@ -79,26 +78,32 @@ body.light .container * {
   z-index: 2100000000;
   opacity: 1;
   height: 450px;
-  background: url("/images/ui/instructions-background-short.png");
+  background: url("/images/ui/instructions-background-short.png") no-repeat;
 }
 
 
 .container .instructions-container.tiny {
   height: 100px;
   width: 500px;
-  background: url("/images/ui/instructions-background-tiny.png");
+  background-image: url("/images/ui/instructions-background-tiny.png");
 }
 
 
 .container .instructions-container.medium {
   height: 450px;
-  background: url("/images/ui/instructions-background-medium.png");
+  background-image: url("/images/ui/instructions-background-medium.png");
 }
 
 
 .container .instructions-container.tall {
   height: 620px;
-  background: url("/images/ui/instructions-background-tall.png");
+  background-image: url("/images/ui/instructions-background-tall.png");
+}
+
+
+.container .instructions-container.tallest {
+  height: 720px;
+  background-image: url("/images/ui/instructions-background-tallest.png");
 }
 
 .container .instructions-container img.close {
@@ -125,26 +130,21 @@ body.light .container * {
   text-align: justify;
 }
 
-.container .throw-dices-button {
-  width: 150px;
+.container #throw-dices-button {
   cursor: pointer;
   z-index: 2175000000;
-}
-
-.container .throw-dices-button.animated {
   animation: pulsating 0.4s infinite alternate;
-}
-
-.container .instructions-container .throw-dices-button {
-  margin-left: 300px;
-}
-
-#throw-dices-button {
   position: absolute;
   top: 395px;
   left: 640px;
   width: 200px;
 }
+.container #throw-dices-button.with-instructions {
+  top: 720px;
+  left: 290px;
+  width: 150px;
+}
+
 
 @keyframes pulsating {
   0% { transform: scale(1); }
@@ -178,10 +178,12 @@ body.light .container * {
 
 .container p span { color: #ffcc00; }
 .container .self { color: #ffcc00; }
-.container table { width: 60%; margin: 50px auto 30px; }
+.container table { width: 90%; margin: 50px auto 30px; }
 .container table td { padding: 8px 0; }
 .container table td:first-child { text-align: right; padding-right: 12px; }
 .container table td:last-child { text-align: left; padding-left: 12px; }
+
+.container .disabling table td:first-child { width: 200px; }
 
 .container .button {
   height: 75px;
