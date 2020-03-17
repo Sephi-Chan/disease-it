@@ -47,4 +47,40 @@ const items = [
   { item: 'sunk_ship', x: -4, y: -1, offsetX: -130, offsetY: 50 },
 ];
 
-export { tiles, items };
+
+const scale = 3/4;
+const hexagonWidth = 340;
+const hexagonHeight = 135;
+const distanceBetweenOriginsX = hexagonWidth * 2/3;
+const distanceBetweenOriginsY = hexagonHeight;
+const badgeImageWidth = 50;
+const badgeHitboxWidth = 200;
+const badgeHitboxHeight = 100;
+const badgeHitboxTopShift = 55;
+const playerIconImageWidth = 100;
+const tileImageWidth = 380;
+const tileImageHeight = 380;
+const tileOriginX = 190;
+const tileOriginY = 290;
+const plagueDoctorImageWidth = 100;
+
+
+export {
+  tiles,
+  items,
+  scale,
+  hexagonWidth,
+  hexagonHeight,
+  distanceBetweenOriginsX,
+  distanceBetweenOriginsY,
+  badgeImageWidth,
+  badgeHitboxWidth,
+  badgeHitboxHeight,
+  badgeHitboxTopShift,
+  playerIconImageWidth,
+  tileImageWidth,
+  tileImageHeight,
+  tileOriginX,
+  tileOriginY,
+  plagueDoctorImageWidth
+};

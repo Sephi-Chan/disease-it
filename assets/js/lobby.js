@@ -12,6 +12,7 @@ export default class Lobby extends React.Component {
     this.state = { gameId: null, phase: null, players: [] };
     this.startButtonClicked = this.startButtonClicked.bind(this);
     this.updateGame = this.updateGame.bind(this);
+    this.disablingPhaseStarted = this.disablingPhaseStarted.bind(this);
   }
 
 
@@ -20,7 +21,7 @@ export default class Lobby extends React.Component {
     Push.game.join().receive('ok', this.updateGame);
     Push.game.on('player_joined_lobby', this.updateGame);
     Push.game.on('player_left_lobby', this.updateGame);
-    Push.game.on('disabling_phase_started', this.updateGame);
+    Push.game.on('disabling_phase_started', this.disablingPhaseStarted);
   }
 
 
@@ -75,13 +76,13 @@ export default class Lobby extends React.Component {
   }
 
 
+  disablingPhaseStarted(game) {
+    window.sounds.horn.play();
+    this.props.disablingPhaseStarted(camelCase(game));
+  }
+
+
   updateGame(game) {
-    if (game.phase == 'disabling') {
-      window.sounds.horn.play();
-      this.props.disablingPhaseStarted(camelCase(game));
-    }
-    else {
-      this.setState({ players: game.players });
-    }
+    this.setState({ players: game.players });
   }
 }

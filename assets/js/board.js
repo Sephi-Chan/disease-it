@@ -1,22 +1,8 @@
 import React from 'react';
-
-const scale = 3/4;
-const itemScale = 4/5;
-const tileImageWidth = 380;
-const tileImageHeight = 380;
-const tileOriginX = 190;
-const tileOriginY = 290;
-const hexagonWidth = 340;
-const hexagonHeight = 135;
-const distanceBetweenOriginsX = hexagonWidth * 2/3;
-const distanceBetweenOriginsY = hexagonHeight;
-const badgeImageWidth = 50;
-const badgeHitboxWidth = 200;
-const badgeHitboxHeight = 100;
-const badgeHitboxTopShift = 55;
-const itemImageWidth = 134;
-const playerIconImageWidth = 100;
-const plagueDoctorImageWidth = 100;
+import Ocean from './board_ocean';
+import Land from './board_land';
+import PlagueDoctors from './board_plague_doctors';
+import { scale, distanceBetweenOriginsX, distanceBetweenOriginsY, playerIconImageWidth, badgeHitboxTopShift, badgeHitboxWidth, badgeHitboxHeight, badgeImageWidth } from './map';
 
 
 function remap(value, min1, max1, min2, max2) {
@@ -39,12 +25,11 @@ export default class Board extends React.Component {
     const neighbourTiles = player ? this.neighboursOf(player.path[0]) : [];
 
     return <div id='map' className={this.props.game ? this.props.game.phase : null}>
-      {this.tiles(playerTile, tilesWithItems, disabledTiles, neighbourTiles)}
-      {this.shorelines()}
-      {this.items()}
+      {this.badges(playerTile, tilesWithItems, disabledTiles, neighbourTiles)}
       {this.player()}
-      {this.plagueDoctors(disabledTiles)}
-      {this.ocean()}
+      <PlagueDoctors tiles={this.props.tiles} disabledTiles={disabledTiles} originX={this.state.originX} originY={this.state.originY} phase={this.props.game ? this.props.game.phase : null} />
+      <Land items={this.props.items} tiles={this.props.tiles} originX={this.state.originX} originY={this.state.originY} />
+      <Ocean tiles={this.state.tiles} originX={this.state.originX} originY={this.state.originY} />
       {player && this.path(player)}
     </div>
   }
@@ -81,38 +66,15 @@ export default class Board extends React.Component {
   }
 
 
-  tiles(playerTile, tilesWithItems, disabledTiles, neighbourTiles) {
+  badges(playerTile, tilesWithItems, disabledTiles, neighbourTiles) {
     return this.state.tiles.map((function(tile){
       const key = tile.x + '_' + tile.y;
       const isVisible = disabledTiles[key] == undefined && playerTile != key;
       const isActive = isVisible && this.isBadgeActive(key, tile.diceRolls, tilesWithItems, disabledTiles, neighbourTiles);
 
-      return <React.Fragment key={key}>
-        <Tile {...tile} originX={this.state.originX} originY={this.state.originY} />
-        {isVisible && <Badge {...tile} originX={this.state.originX} originY={this.state.originY} isActive={isActive} onBadgeClick={this.props.onBadgeClick} />}
-      </React.Fragment>;
+      if (isVisible) return <Badge key={key} {...tile} originX={this.state.originX} originY={this.state.originY} isActive={isActive} onBadgeClick={this.props.onBadgeClick} />
+      else return null;
     }).bind(this));
-  }
-
-
-  ocean() {
-    return <div className="waves">
-      <img src="/images/tiles/tile_ocean_1.png" width={hexagonWidth * scale} className="wave wave-1" style={{left: -40, top: 390 }} draggable="false" />
-      <img src="/images/tiles/tile_ocean_2.png" width={hexagonWidth * scale} className="wave wave-2" style={{left: 20, top: 640 }} draggable="false" />
-      <img src="/images/tiles/tile_ocean_15.png" width={hexagonWidth * scale} className="wave wave-4" style={{left: 300, top: 670 }} draggable="false" />
-      <img src="/images/tiles/tile_ocean_6.png" width={hexagonWidth * scale} className="wave wave-3" style={{left: 645, top: 670 }} draggable="false" />
-      <img src="/images/tiles/tile_ocean_17.png" width={hexagonWidth * scale} className="wave wave-2" style={{left: 990, top: 665 }} draggable="false" />
-      <img src="/images/tiles/tile_ocean_0.png" width={hexagonWidth * scale} className="wave wave-1" style={{left: 1200, top: 600 }} draggable="false" />
-      <img src="/images/tiles/tile_ocean_1.png" width={hexagonWidth * scale} className="wave wave-1" style={{left: 1225, top: 375 }} draggable="false" />
-      <img src="/images/tiles/tile_ocean_8.png" width={hexagonWidth * scale} className="wave wave-3" style={{left: 1230, top: 60 }} draggable="false" />
-      <img src="/images/tiles/tile_ocean_8.png" width={hexagonWidth * scale} className="wave wave-4" style={{left: 1110, top: -100 }} draggable="false" />
-      <img src="/images/tiles/tile_ocean_6.png" width={hexagonWidth * scale} className="wave wave-2" style={{left: 900, top: -160 }} draggable="false" />
-      <img src="/images/tiles/tile_ocean_10.png" width={hexagonWidth * scale} className="wave wave-4" style={{left: 620, top: -130 }} draggable="false" />
-      <img src="/images/tiles/tile_ocean_0.png" width={hexagonWidth * scale} className="wave wave-1" style={{left: 450, top: -60 }} draggable="false" />
-      <img src="/images/tiles/tile_ocean_6.png" width={hexagonWidth * scale} className="wave wave-2" style={{left: 360, top: 55 }} draggable="false" />
-      <img src="/images/tiles/tile_ocean_17.png" width={hexagonWidth * scale} className="wave wave-3" style={{left: 145, top: 125 }} draggable="false" />
-      <img src="/images/tiles/tile_ocean_15.png" width={hexagonWidth * scale} className="wave wave-1" style={{left: -55, top: 190 }} draggable="false" />
-    </div>
   }
 
 
@@ -149,25 +111,6 @@ export default class Board extends React.Component {
   }
 
 
-  shorelines() {
-    return this.state.tiles.map((function({ x, y }){
-      return this.shorelinesForTile(x, y).map((function([[x, y], direction]) {
-        const key = 'shoreline_' + x + '_' + y;
-        return <Shoreline key={key} x={x} y={y} direction={direction} originX={this.state.originX} originY={this.state.originY} />;
-      }).bind(this));
-    }).bind(this));
-  }
-
-
-  items() {
-    return this.props.items.map((function(item){
-      const key = 'item_' + item.x + '_' + item.y + '_' + item.offsetX + '_' + item.offsetY;
-      const alreadyVisited = this.props.game && this.props.game[this.props.playerId].path.includes(item.x + '_' + item.y);
-      return <Item key={key} {...item} originX={this.state.originX} originY={this.state.originY} alreadyVisited={alreadyVisited} />;
-    }).bind(this));
-  }
-
-
   player() {
     if (!this.props.game || this.props.game.phase == 'lobby') return null;
 
@@ -185,23 +128,6 @@ export default class Board extends React.Component {
   }
 
 
-  plagueDoctors(disabledTiles) {
-    return this.state.tiles.map(function({ x, y, zIndex }) {
-      if (disabledTiles[x + '_' + y]) {
-        const key = 'plague_doctor_' + x + '_' + y;
-        const style = {
-          left: Math.round(this.props.originX + (distanceBetweenOriginsX * (x - y) * scale) - (plagueDoctorImageWidth / 2 * scale)),
-          top: Math.round(this.props.originY - (distanceBetweenOriginsY / 2 * (x + y) * scale) - (90 * scale)),
-          width: Math.round(plagueDoctorImageWidth * scale),
-          zIndex: zIndex + 300
-        }
-        return <img key={key} src={'/images/items/item_plague_doctor.png'} style={style} draggable='false' />;
-      }
-      else return null;
-    }.bind(this));
-  }
-
-
   buildState(props) {
     this.state = {
       tiles: props.tiles,
@@ -209,7 +135,7 @@ export default class Board extends React.Component {
       minX: 0, maxX: 0,
       minY: 0, maxY: 0,
       maxZIndex: 0,
-      tileIndexes: {}
+      existingTiles: {}
     };
 
     this.state.tiles.map((function({ x, y }){
@@ -217,7 +143,7 @@ export default class Board extends React.Component {
       if (x > this.state.maxX) this.state.maxX = x;
       if (y < this.state.minY) this.state.minY = y;
       if (y > this.state.maxY) this.state.maxY = y;
-      this.state.tileIndexes[x + '_' + y] = true;
+      this.state.existingTiles[x + '_' + y] = true;
     }).bind(this));
 
     this.state.tiles.map((function(tile){
@@ -227,46 +153,6 @@ export default class Board extends React.Component {
       if (tile.zIndex > this.state.maxZIndex) this.state.maxZIndex = tile.zIndex;
     }).bind(this));
   }
-
-
-  shorelinesForTile(x, y) {
-    return [
-      [ [ (x + 1), (y + 1) ], 'south' ],
-      [ [ (x + 1), y ], 'south_west' ],
-      [ [ x, (y - 1) ], 'north_west' ],
-      [ [ (x - 1), (y - 1) ], 'north' ],
-      [ [ (x - 1), y ], 'north_east' ],
-      [ [ x, (y + 1) ], 'south_east' ]
-    ].filter((function([[x, y], direction]) {
-      return !this.state.tileIndexes[x + '_' + y];
-    }).bind(this));
-  }
-}
-
-
-function Tile({ x, y, terrain, zIndex, originX, originY }) {
-  const style = {
-    left: Math.round(originX - (tileOriginX * scale) + (distanceBetweenOriginsX * (x - y) * scale)),
-    top: Math.round(originY - (tileOriginY * scale) - (distanceBetweenOriginsY / 2 * (x + y) * scale)),
-    width: Math.round(tileImageWidth * scale),
-    height: Math.round(tileImageHeight * scale),
-    zIndex: zIndex
-  }
-
-  return <img src={'/images/tiles/tile_' + terrain + '.png'} style={style} draggable='false' />;
-}
-
-
-function Shoreline({ x, y, direction, originX, originY }) {
-  const classes = [ 'shoreline', direction ].join(' ');
-  const style = {
-    left: Math.round(originX - (tileOriginX * scale) + (distanceBetweenOriginsX * (x - y) * scale)),
-    top: Math.round(originY - (tileOriginY * scale) - (distanceBetweenOriginsY / 2 * (x + y) * scale)),
-    width: Math.round(tileImageWidth * scale),
-    height: Math.round(tileImageHeight * scale)
-  };
-
-  return <img src={'/images/shorelines/shoreline_' + direction + '.png'} style={style} draggable='false' className={classes} />
 }
 
 
@@ -303,19 +189,6 @@ class Badge extends React.Component {
 }
 
 
-function Item({ x, y, item, offsetX, offsetY, originX, originY, alreadyVisited }) {
-  const classes = [ 'item', item, alreadyVisited ? 'visited' : null ].join(' ')
-  const style = {
-    left: Math.round(originX + (distanceBetweenOriginsX * (x - y) * scale) - (itemImageWidth/2*scale*itemScale) + (offsetX * itemScale * scale)),
-    top: Math.round(originY - (distanceBetweenOriginsY / 2 * (x + y) * scale) - (itemImageWidth/2*scale*itemScale) + (offsetY * itemScale * scale)),
-    width: Math.round(itemImageWidth * itemScale * scale),
-    zIndex: 205000000
-  };
-
-  return <img src={'/images/items/item_' + item + '.png'} style={style} draggable='false' className={classes} />
-}
-
-
 function parseTile(tileAsString) {
   return tileAsString.split('_').map(i => parseInt(i));
 }
@@ -327,6 +200,7 @@ function objectFromArray(array) {
     return acc;
   }, {});
 }
+
 
 function pathDirection(x, y) {
   if (x == -1 && y == 0) return ['up-right', 'up-right', 0, -65];
