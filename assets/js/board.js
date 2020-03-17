@@ -45,7 +45,39 @@ export default class Board extends React.Component {
       {this.player()}
       {this.plagueDoctors(disabledTiles)}
       {this.ocean()}
+      {player && this.path(player)}
     </div>
+  }
+
+
+  path(player) {
+    const path = player.path.reverse();
+    const followedPaths = {};
+
+    return path.map(function(tile, index){
+      const nextTile = path[index + 1];
+
+      if (nextTile && !followedPaths[tile + '_' + nextTile]) {
+        const [nX, nY] = nextTile ? parseTile(nextTile) : [ null, null ];
+        const [x, y] = parseTile(tile);
+        const dX = x - nX;
+        const dY = y - nY;
+        const [direction, imageDirection, shiftX, shiftY] = pathDirection(dX, dY);
+        const key = 'step_' + index;
+        const style = {
+          left: Math.round(this.props.originX + (distanceBetweenOriginsX * (x - y) * scale) + shiftX),
+          top: Math.round(this.props.originY - (distanceBetweenOriginsY / 2 * (x + y) * scale) + shiftY),
+          zIndex: 20000000
+        };
+        followedPaths[tile + '_' + nextTile] = true;
+        followedPaths[nextTile + '_' + tile] = true;
+
+        return <img key={key} src={'/images/paths/path-' + imageDirection + '.png'} style={style} className="path" draggable='false' />;
+      }
+      else {
+        return null;
+      }
+    }.bind(this));
   }
 
 
@@ -294,4 +326,13 @@ function objectFromArray(array) {
     acc[item] = true;
     return acc;
   }, {});
+}
+
+function pathDirection(x, y) {
+  if (x == -1 && y == 0) return ['up-right', 'up-right', 0, -65];
+  if (x == -1 && y == -1) return ['up', 'up', 0, -110];
+  if (x == 1 && y == 1) return ['down', 'up', -10, -10];
+  if (x == 0 && y == 1) return ['down-right', 'down-right', 0, -10];
+  if (x == 1 && y == 0) return ['down-left', 'up-right', -177, 0];
+  if (x == 0 && y == -1) return ['up-left', 'down-right', -177, -75];
 }

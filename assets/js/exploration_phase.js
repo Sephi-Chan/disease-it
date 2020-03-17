@@ -23,7 +23,7 @@ export default class ExplorationPhase extends React.Component {
       {this.rolledDices()}
       {this.lifes()}
       <Board {...this.props} width={1440} height={900} tiles={tiles} items={items} originX={1440/2 + 50} originY={900/2 - 30} onBadgeClick={this.onTileClick} />
-      {this.diceRoller(this.state.showInstructions)}
+      {this.diceRoller(player)}
     </React.Fragment>;
   }
 
@@ -78,10 +78,11 @@ export default class ExplorationPhase extends React.Component {
   }
 
 
-  diceRoller(showInstructions) {
+  diceRoller(player) {
     if (this.props.game.dicesRolls) return;
     if (!this.isDiceThrower(this.props.game, this.props.playerId)) return;
-    return <img src='/images/ui/dices.png' id='throw-dices-button' className={showInstructions ? 'with-instructions' : null} onClick={this.rollDicesClicked} />;
+    const withInstructions = this.state.showInstructions && player.path.length == 1 && player.currentRound == null;
+    return <img src='/images/ui/dices.png' id='throw-dices-button' className={withInstructions ? 'with-instructions' : null} onClick={this.rollDicesClicked} />;
   }
 
 

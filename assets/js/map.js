@@ -35,15 +35,15 @@ const tiles = [
 ];
 
 const items = [
-  { item: 'tower', x: 2, y: 2, offsetX: -140, offsetY: -20 },
+  { item: 'tower', x: 2, y: 2, offsetX: -140, offsetY: -40 },
   { item: 'church', x: -2, y: -3, offsetX: -30, offsetY: 10 },
   { item: 'castle', x: 3, y: 1, offsetX: 150, offsetY: -70 },
-  { item: 'tents', x: 1, y: -1, offsetX: 110, offsetY: -40 },
+  { item: 'tents', x: 1, y: -1, offsetX: 90, offsetY: -40 },
   { item: 'ship', x: 3, y: 1, offsetX: 270, offsetY: -110 },
   { item: 'ship', x: 3, y: 1, offsetX: 320, offsetY: -60 },
-  { item: 'city', x: 0, y: 1, offsetX: -40, offsetY: 20 },
-  { item: 'fortified_city', x: -2, y: -2, offsetX: -40, offsetY: -70 },
-  { item: 'mill', x: -2, y: 1, offsetX: 30, offsetY: 0 },
+  { item: 'city', x: 0, y: 1, offsetX: -100, offsetY: -40 },
+  { item: 'fortified_city', x: -2, y: -2, offsetX: -100, offsetY: -70 },
+  { item: 'mill', x: -2, y: 1, offsetX: 60, offsetY: -20 },
   { item: 'sunk_ship', x: -4, y: -1, offsetX: -130, offsetY: 50 },
 ];
 

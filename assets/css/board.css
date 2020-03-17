@@ -13,6 +13,11 @@
 #map .player.gone { animation: bounce 0.4s infinite alternate; }
 
 
+#map .path {
+  position: absolute;
+  opacity: 0.8;
+}
+
 #map .badge {
   position: absolute;
   text-align: center;
@@ -48,7 +53,7 @@
   transform-origin: 67px 40px;
   animation: ship 0.8s infinite alternate;
 }
-#map .item.visited { filter: grayscale(1); }
+#map .item.visited { filter: grayscale(0.5); }
 
 #map .waves { opacity: 0.9; }
 #map .waves .wave-1 { animation: waves 1.4s infinite alternate; z-index: 100000; }
