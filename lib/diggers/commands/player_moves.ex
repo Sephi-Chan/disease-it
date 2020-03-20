@@ -28,7 +28,7 @@ defmodule Diggers.PlayerMoves do
       not tile_in_neighbours?(game, command.player_id, tile) ->
         {:error, :tile_not_in_neighbours}
 
-      Diggers.Game.disabled?(game, command.player_id, tile) ->
+      Diggers.Game.disabled?(game, command.player_id, command.tile) ->
         {:error, :tile_is_disabled}
 
       not tile_is_available?(game, command.player_id, tile) ->

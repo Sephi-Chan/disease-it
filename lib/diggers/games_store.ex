@@ -52,8 +52,8 @@ defmodule Diggers.GamesStore do
   end
 
 
-  def exploration_phase_started(game_id) do
-    GenServer.call(Diggers.GamesStore, {:exploration_phase_started, game_id})
+  def exploration_phase_started(game_id, board) do
+    GenServer.call(Diggers.GamesStore, {:exploration_phase_started, game_id, board})
   end
 
 
@@ -131,51 +131,16 @@ defmodule Diggers.GamesStore do
   end
 
 
-  def handle_call({:disabling_phase_started, game_id, players_boards, board}, _from, state) do
-    start_tile = Diggers.Board.start_tile(board)
-
-    game_state = players_boards
-      |> Enum.reduce(state[game_id], fn ({player_id, board_index}, acc) ->
+  def handle_call({:exploration_phase_started, game_id, board}, _from, state) do
+    game_state = state[game_id].players
+      |> Enum.reduce(state[game_id], fn (player_id, acc) ->
         Map.put(acc, player_id, %{
-          board_index: board_index,
-          tiles_to_disable: Diggers.Tile.tiles_to_disable_for_players_count(Enum.count(state[game_id].players)),
           lifes: 5,
           current_round: nil,
-          path: [Diggers.Tile.dump(start_tile)]
+          path: [Diggers.Tile.dump(Diggers.Board.start_tile(board))]
         })
       end)
-      |> put_in([:phase], "disabling")
-      |> put_in([:disabled_tiles], Map.new(players_boards, fn ({_player_id, index}) -> {index, []} end))
-
-    {:reply, game_state, Map.put(state, game_id, game_state)}
-  end
-
-
-  def handle_call({:player_disabled_tile, game_id, player_id, tile}, _from, state) do
-    board_index = state[game_id][player_id].board_index
-
-    game_state = state[game_id]
-      |> update_in([:disabled_tiles, board_index], fn (tiles) -> tiles ++ [tile] end)
-      |> update_in([player_id, :tiles_to_disable], fn (count) -> count - 1 end)
-
-    {:reply, game_state, Map.put(state, game_id, game_state)}
-  end
-
-
-  def handle_call({:next_disabling_round_started, game_id, players_boards}, _from, state) do
-    game_state =
-      Enum.reduce(players_boards, state[game_id], fn ({player_id, board_index}, acc) ->
-        acc
-          |> put_in([player_id, :tiles_to_disable], Diggers.Tile.tiles_to_disable_for_players_count(Enum.count(state[game_id].players)))
-          |> put_in([player_id, :board_index], board_index)
-      end)
-
-    {:reply, game_state, Map.put(state, game_id, game_state)}
-  end
-
-
-  def handle_call({:exploration_phase_started, game_id}, _from, state) do
-    game_state = state[game_id]
+      |> put_in([:board], board)
       |> put_in([:phase], "exploration")
       |> put_in([:gone_players], [])
       |> put_in([:dead_players], [])

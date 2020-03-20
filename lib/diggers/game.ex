@@ -68,9 +68,8 @@ defmodule Diggers.Game do
   end
 
 
-  def disabled?(game, player_id, tile) do
-    board_index = Diggers.Game.board_of_player(game, player_id)
-    Enum.member?(game.disabled_tiles[board_index], tile) or Enum.member?(game.disabled_tiles_this_round[board_index], tile)
+  def disabled?(game, _player_id, tile) do
+    Enum.member?(game.disabled_tiles, tile)
   end
 
 
@@ -95,9 +94,10 @@ defmodule Diggers.Game do
   end
 
 
-  def disabled_tiles_for_player(game, player_id) do
-    board_index = board_of_player(game, player_id)
-    MapSet.new(game.disabled_tiles[board_index])
+  def disabled_tiles_for_player(game, _player_id) do
+    game.disabled_tiles
+      |> Enum.map(&Diggers.Tile.parse/1)
+      |> MapSet.new()
   end
 
 

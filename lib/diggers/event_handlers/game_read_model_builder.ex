@@ -59,7 +59,7 @@ defmodule Diggers.GameReadModelBuilder do
 
 
   def handle(event = %Diggers.ExplorationPhaseStarted{}, _metadata) do
-    game = Diggers.GamesStore.exploration_phase_started(event.game_id)
+    game = Diggers.GamesStore.exploration_phase_started(event.game_id, event.board)
     DiggersWeb.Endpoint.broadcast!("game:#{event.game_id}", "exploration_phase_started", game)
     :ok
   end
