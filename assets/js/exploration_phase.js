@@ -19,7 +19,7 @@ export default class ExplorationPhase extends React.Component {
     const isGone = this.props.game.gonePlayers.includes(this.props.playerId);
 
     return <React.Fragment>
-      {this.state.showInstructions && this.instructionsContainer(player, isGone)}
+      {this.instructionsContainer(player, isGone)}
       {this.rolledDices()}
       {this.lifes()}
       <Board {...this.props} width={1440} height={900} tiles={tiles} items={items} originX={1440/2 + 50} originY={900/2 - 30} onBadgeClick={this.onTileClick} />
@@ -45,7 +45,7 @@ export default class ExplorationPhase extends React.Component {
 
 
   instructionsContainer(player, isGone) {
-    if (player.path.length == 1 && player.currentRound == null) {
+    if (this.state.showInstructions &&  player.path.length == 1 && player.currentRound == null) {
       return <div className='instructions-container tallest'>
         <img src='/images/icons/icon_close.png' className='close' onClick={this.dismissInstructions} />
 
@@ -59,11 +59,6 @@ export default class ExplorationPhase extends React.Component {
     else if (isGone) {
       return <div className='instructions-container tiny'>
         <p>Vous avez atteint <span>le port</span> ! Félicitations !</p>
-      </div>
-    }
-    else if (player.currentRound != null) {
-      return <div className='instructions-container tiny'>
-        <p><span>En attente</span> de vos adversaires…</p>
       </div>
     }
   }
@@ -87,7 +82,7 @@ export default class ExplorationPhase extends React.Component {
 
 
   rollDicesClicked() {
-    this.setState({ showInstructions: false });
+    if (this.state.showInstructions) this.setState({ showInstructions: false });
     Push.game.push('player_rolls_dices', {});
   }
 

@@ -1,13 +1,10 @@
 import React from 'react';
 import Ocean from './board_ocean';
 import Land from './board_land';
+import Path from './board_path';
 import PlagueDoctors from './board_plague_doctors';
 import { scale, distanceBetweenOriginsX, distanceBetweenOriginsY, playerIconImageWidth, badgeHitboxTopShift, badgeHitboxWidth, badgeHitboxHeight, badgeImageWidth } from './map';
-
-
-function remap(value, min1, max1, min2, max2) {
-  return (value - min1) * (max2 - min2) / (max1 - min1) + min2;
-}
+import { remap, objectFromArray, parseTile } from './utils';
 
 
 export default class Board extends React.Component {
@@ -29,39 +26,8 @@ export default class Board extends React.Component {
       <PlagueDoctors tiles={this.props.tiles} disabledTiles={disabledTiles} originX={this.state.originX} originY={this.state.originY} phase={this.props.game ? this.props.game.phase : null} />
       <Land items={this.props.items} tiles={this.props.tiles} originX={this.state.originX} originY={this.state.originY} />
       <Ocean tiles={this.state.tiles} originX={this.state.originX} originY={this.state.originY} />
-      {player && this.path(player)}
+      {player && <Path tiles={this.state.tiles} originX={this.state.originX} originY={this.state.originY} player={player} />}
     </div>
-  }
-
-
-  path(player) {
-    const path = player.path.reverse();
-    const followedPaths = {};
-
-    return path.map(function(tile, index){
-      const nextTile = path[index + 1];
-
-      if (nextTile && !followedPaths[tile + '_' + nextTile]) {
-        const [nX, nY] = nextTile ? parseTile(nextTile) : [ null, null ];
-        const [x, y] = parseTile(tile);
-        const dX = x - nX;
-        const dY = y - nY;
-        const [direction, imageDirection, shiftX, shiftY] = pathDirection(dX, dY);
-        const key = 'step_' + index;
-        const style = {
-          left: Math.round(this.props.originX + (distanceBetweenOriginsX * (x - y) * scale) + shiftX),
-          top: Math.round(this.props.originY - (distanceBetweenOriginsY / 2 * (x + y) * scale) + shiftY),
-          zIndex: 20000000
-        };
-        followedPaths[tile + '_' + nextTile] = true;
-        followedPaths[nextTile + '_' + tile] = true;
-
-        return <img key={key} src={'/images/paths/path-' + imageDirection + '.png'} style={style} className="path" draggable='false' />;
-      }
-      else {
-        return null;
-      }
-    }.bind(this));
   }
 
 
@@ -179,27 +145,4 @@ class Badge extends React.Component {
   badgeClicked() {
     this.props.onBadgeClick({ x: this.props.x, y: this.props.y });
   }
-}
-
-
-function parseTile(tileAsString) {
-  return tileAsString.split('_').map(i => parseInt(i));
-}
-
-
-function objectFromArray(array) {
-  return array.reduce(function(acc, item) {
-    acc[item] = true;
-    return acc;
-  }, {});
-}
-
-
-function pathDirection(x, y) {
-  if (x == -1 && y == 0) return ['up-right', 'up-right', 0, -65];
-  if (x == -1 && y == -1) return ['up', 'up', 0, -110];
-  if (x == 1 && y == 1) return ['down', 'up', -10, -10];
-  if (x == 0 && y == 1) return ['down-right', 'down-right', 0, -10];
-  if (x == 1 && y == 0) return ['down-left', 'up-right', -177, 0];
-  if (x == 0 && y == -1) return ['up-left', 'down-right', -177, -75];
 }
