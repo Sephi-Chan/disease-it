@@ -37,27 +37,6 @@ defmodule Diggers.GameReadModelBuilder do
   end
 
 
-  def handle(event = %Diggers.DisablingPhaseStarted{}, _metadata) do
-    game = Diggers.GamesStore.disabling_phase_started(event.game_id, event.players_boards, event.board)
-    DiggersWeb.Endpoint.broadcast!("game:#{event.game_id}", "disabling_phase_started", game)
-    :ok
-  end
-
-
-  def handle(event = %Diggers.PlayerDisabledTile{}, _metadata) do
-    game = Diggers.GamesStore.player_disabled_tile(event.game_id, event.player_id, event.tile)
-    DiggersWeb.Endpoint.broadcast!("game:#{event.game_id}", "player_disabled_tile", game)
-    :ok
-  end
-
-
-  def handle(event = %Diggers.NextDisablingRoundStarted{}, _metadata) do
-    game = Diggers.GamesStore.next_disabling_round_started(event.game_id, event.players_boards)
-    DiggersWeb.Endpoint.broadcast!("game:#{event.game_id}", "next_disabling_round_started", game)
-    :ok
-  end
-
-
   def handle(event = %Diggers.ExplorationPhaseStarted{}, _metadata) do
     game = Diggers.GamesStore.exploration_phase_started(event.game_id, event.board)
     DiggersWeb.Endpoint.broadcast!("game:#{event.game_id}", "exploration_phase_started", game)

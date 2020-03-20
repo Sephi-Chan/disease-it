@@ -7,7 +7,6 @@ defmodule Diggers.Router do
     Diggers.PlayerJoinsLobby,
     Diggers.PlayerLeavesLobby,
     Diggers.PlayerStartsGame,
-    Diggers.PlayerDisablesTile,
     Diggers.PlayerRollsDices,
     Diggers.PlayerMoves
   ], to: Diggers.Game, identity: :game_id)

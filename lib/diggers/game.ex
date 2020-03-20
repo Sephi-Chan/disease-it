@@ -4,8 +4,6 @@ defmodule Diggers.Game do
     :players,
     :phase,
     :disabled_tiles,
-    :disabled_tiles_this_round,
-    :players_boards,
     :actions_this_round,
     :dices_rolls,
     :paths,
@@ -61,20 +59,8 @@ defmodule Diggers.Game do
   end
 
 
-  def can_disable_more_tiles?(game, player_id) do
-    board_index = board_of_player(game, player_id)
-    disabled_tiles = game.disabled_tiles_this_round[board_index]
-    Enum.count(disabled_tiles) < Diggers.Tile.tiles_to_disable_for_players_count(Enum.count(game.players))
-  end
-
-
   def disabled?(game, _player_id, tile) do
     Enum.member?(game.disabled_tiles, tile)
-  end
-
-
-  def board_of_player(game, player_id) do
-    game.players_boards[player_id]
   end
 
 

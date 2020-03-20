@@ -37,21 +37,6 @@ defmodule Diggers.GamesStore do
   end
 
 
-  def disabling_phase_started(game_id, players_boards, board) do
-    GenServer.call(Diggers.GamesStore, {:disabling_phase_started, game_id, players_boards, board})
-  end
-
-
-  def player_disabled_tile(game_id, player_id, tile) do
-    GenServer.call(Diggers.GamesStore, {:player_disabled_tile, game_id, player_id, tile})
-  end
-
-
-  def next_disabling_round_started(game_id, players_boards) do
-    GenServer.call(Diggers.GamesStore, {:next_disabling_round_started, game_id, players_boards})
-  end
-
-
   def exploration_phase_started(game_id, board) do
     GenServer.call(Diggers.GamesStore, {:exploration_phase_started, game_id, board})
   end
