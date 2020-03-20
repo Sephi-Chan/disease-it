@@ -12,7 +12,7 @@ export default class Lobby extends React.Component {
     this.state = { gameId: null, phase: null, players: [] };
     this.startButtonClicked = this.startButtonClicked.bind(this);
     this.updateGame = this.updateGame.bind(this);
-    this.disablingPhaseStarted = this.disablingPhaseStarted.bind(this);
+    this.explorationPhaseStarted = this.explorationPhaseStarted.bind(this);
   }
 
 
@@ -21,7 +21,7 @@ export default class Lobby extends React.Component {
     Push.game.join().receive('ok', this.updateGame);
     Push.game.on('player_joined_lobby', this.updateGame);
     Push.game.on('player_left_lobby', this.updateGame);
-    Push.game.on('disabling_phase_started', this.disablingPhaseStarted);
+    Push.game.on('exploration_phase_started', this.explorationPhaseStarted);
   }
 
 
@@ -35,8 +35,8 @@ export default class Lobby extends React.Component {
         <p>
           <span>Partagez</span> l'adresse de cette page avec vos amis pour qu'ils puissent se joindre à la partie.
           {isLeader
-            ? <React.Fragment><span> Lancez</span> ensuite la partie.</React.Fragment>
-            : <React.Fragment><span> Attendez</span> ensuite que l'hôte lance la partie.</React.Fragment>
+            ? <React.Fragment> <span>Lancez</span> ensuite la partie.</React.Fragment>
+            : <React.Fragment> <span>Attendez</span> ensuite que l'hôte lance la partie.</React.Fragment>
           }
         </p>
 
@@ -64,7 +64,13 @@ export default class Lobby extends React.Component {
 
 
   startButtonClicked() {
-    Push.game.push('start_disabling_phase', {});
+    Push.game.push('start_exploration_phase', {});
+  }
+
+
+  explorationPhaseStarted(game) {
+    window.sounds.horn.play();
+    this.props.updateGame(camelCase(game));
   }
 
 
@@ -73,12 +79,6 @@ export default class Lobby extends React.Component {
     const isSelf = this.props.playerId == this.state.players[index];
     const classes = [ 'slot', isEmpty ? 'empty' : null, isSelf ? 'self' : null ].join(' ');
     return <div className={classes}>{diseases[index]}</div>;
-  }
-
-
-  disablingPhaseStarted(game) {
-    window.sounds.horn.play();
-    this.props.disablingPhaseStarted(camelCase(game));
   }
 
 

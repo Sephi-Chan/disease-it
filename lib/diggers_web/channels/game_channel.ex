@@ -21,6 +21,17 @@ defmodule DiggersWeb.GameChannel do
   end
 
 
+  def handle_in("start_exploration_phase", _params, socket) do
+    :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerStartsGame{
+      game_id: socket.assigns.game_id,
+      player_id: socket.assigns.player_id,
+      board: Diggers.Board.disease_it,
+      disabled_tiles: []
+    })
+    {:noreply, socket}
+  end
+
+
   def handle_in("player_rolls_dices", _params, socket) do
     game = Diggers.GamesStore.game(socket.assigns.game_id)
     max_dices_count = Diggers.Game.max_dices_count(game)

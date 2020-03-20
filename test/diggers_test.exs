@@ -71,6 +71,7 @@ defmodule DiggersTest do
     {:error, :not_allowed_now} = Diggers.CommandedApplication.dispatch(%Diggers.PlayerLeavesLobby{game_id: "game_1", player_id: "Corwin"})
     {:error, :not_allowed_now} = Diggers.CommandedApplication.dispatch(%Diggers.PlayerJoinsLobby{game_id: "game_1", player_id: "Eric"})
     assert Diggers.GamesStore.game("game_1").phase == "exploration"
+    assert Diggers.GamesStore.game("game_1").disabled_tiles == ["1_3", "1_0", "3_2", "5_4"]
 
     :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: "game_1", dices_rolls: [1, 2, 2, 1]})
     {:error, :dices_already_rolled} = Diggers.CommandedApplication.dispatch(%Diggers.PlayerRollsDices{game_id: "game_1", dices_rolls: [1, 2, 2, 1]})

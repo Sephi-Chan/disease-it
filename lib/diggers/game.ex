@@ -39,11 +39,6 @@ defmodule Diggers.Game do
   end
 
 
-  def disabling_phase?(game) do
-    game.phase == "disabling"
-  end
-
-
   def exploration_phase?(game) do
     game.phase == "exploration"
   end

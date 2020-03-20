@@ -49,10 +49,10 @@ export default class ExplorationPhase extends React.Component {
       return <div className='instructions-container tallest'>
         <img src='/images/icons/icon_close.png' className='close' onClick={this.dismissInstructions} />
 
-        <p>Vous avez reçu le plateau #{player.boardIndex + 1}. Vous êtes représenté par <span>un crâne</span>.</p>
+        <p>Vous êtes représenté par <span>un crâne</span>.</p>
         <p>Vote objectif est de <span>rejoindre le port</span>. Marquez des points en traversant le plus de <span>villages</span>, <span>campements</span>, <span>moulins</span>… possible en chemin.</p>
         <p>En début de tour, {this.someoneThrowDices()} : chaque joueur doit <span>se déplacer</span> sur une case adjacente qui porte un nombre indiqué par les dés. Si aucune case n'est disponible : vous <span>perdez</span> un point de mort ! Vous êtes <span>éliminé</span> quand vous n'en avez plus.</p>
-        <p>Ne perdez pas de temps : vous ne pouvez pas voir les autres joueurs et <span>les premiers arrivés</span> au port seront récompensés !</p>
+        <p>Ne perdez pas de temps : <span>les premiers arrivés</span> au port seront récompensés !</p>
         <p>À chaque fois qu'un joueur atteint le port, <span>un dé de moins</span> est lancé en début de tour, resserrant un peu plus l'étau sur les joueurs restants !</p>
       </div>;
     }

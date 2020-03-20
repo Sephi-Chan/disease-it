@@ -19,7 +19,7 @@ class App extends React.Component {
     super(props);
     this.state = { gameId: null, game: props.game };
     this.openLobbyClicked = this.openLobbyClicked.bind(this);
-    this.disablingPhaseStarted = this.disablingPhaseStarted.bind(this);
+    this.explorationPhaseStarted = this.explorationPhaseStarted.bind(this);
   }
 
 
@@ -40,7 +40,7 @@ class App extends React.Component {
       return <Game {...this.props} game={game} />;
     }
     else if (gameId) {
-      return <Lobby {...this.props} gameId={gameId} disablingPhaseStarted={this.disablingPhaseStarted} />;
+      return <Lobby {...this.props} gameId={gameId} updateGame={this.explorationPhaseStarted} />;
     }
     else {
       return <Home {...this.props} openLobbyClicked={this.openLobbyClicked} />;
@@ -58,7 +58,7 @@ class App extends React.Component {
   }
 
 
-  disablingPhaseStarted(game) {
+  explorationPhaseStarted(game) {
     this.setState({ game });
   }
 }

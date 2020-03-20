@@ -20,12 +20,11 @@ export default class Board extends React.Component {
   render() {
     const player = this.props.game ? this.props.game[this.props.playerId] : null;
     const playerTile = player ? player.path[0] : null;
-    const tilesWithItems = objectFromArray(this.props.items.map(({x, y}) => x + '_' + y));
-    const disabledTiles = objectFromArray(this.props.game ? this.props.game.disabledTiles[player.boardIndex] : []);
+    const disabledTiles = objectFromArray(this.props.game ? this.props.game.disabledTiles : []);
     const neighbourTiles = player ? this.neighboursOf(player.path[0]) : [];
 
     return <div id='map' className={this.props.game ? this.props.game.phase : null}>
-      {this.badges(playerTile, tilesWithItems, disabledTiles, neighbourTiles)}
+      {this.badges(playerTile, disabledTiles, neighbourTiles)}
       {this.player()}
       <PlagueDoctors tiles={this.props.tiles} disabledTiles={disabledTiles} originX={this.state.originX} originY={this.state.originY} phase={this.props.game ? this.props.game.phase : null} />
       <Land items={this.props.items} tiles={this.props.tiles} originX={this.state.originX} originY={this.state.originY} />
@@ -66,11 +65,11 @@ export default class Board extends React.Component {
   }
 
 
-  badges(playerTile, tilesWithItems, disabledTiles, neighbourTiles) {
+  badges(playerTile, disabledTiles, neighbourTiles) {
     return this.state.tiles.map((function(tile){
       const key = tile.x + '_' + tile.y;
       const isVisible = disabledTiles[key] == undefined && playerTile != key;
-      const isActive = isVisible && this.isBadgeActive(key, tile.diceRolls, tilesWithItems, disabledTiles, neighbourTiles);
+      const isActive = isVisible && this.isBadgeActive(key, tile.diceRolls, disabledTiles, neighbourTiles);
 
       if (isVisible) return <Badge key={key} {...tile} originX={this.state.originX} originY={this.state.originY} isActive={isActive} onBadgeClick={this.props.onBadgeClick} />
       else return null;
@@ -78,14 +77,8 @@ export default class Board extends React.Component {
   }
 
 
-  isBadgeActive(tile, acceptedRolls, tilesWithItems, disabledTiles, neighbourTiles) {
-    if (this.props.game && this.props.game.phase == 'disabling') {
-      if (this.props.game[this.props.playerId].tilesToDisable == 0) return false;
-      if (tilesWithItems[tile]) return false;
-      if (disabledTiles[tile]) return false;
-      return this.neighboursOf(tile).map(neighbour => disabledTiles[neighbour]).filter(Boolean).length == 0;
-    }
-    else if (this.props.game && this.props.game.phase == 'exploration') {
+  isBadgeActive(tile, acceptedRolls, disabledTiles, neighbourTiles) {
+    if (this.props.game && this.props.game.phase == 'exploration') {
       if (this.props.game.gonePlayers.includes(this.props.playerId)) return false;
       if (this.props.game[this.props.playerId].currentRound != null) return false;
       return neighbourTiles.filter(tile => !disabledTiles[tile]).indexOf(tile) != -1

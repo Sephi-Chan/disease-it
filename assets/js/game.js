@@ -1,5 +1,4 @@
 import React from 'react';
-import DisablingPhase from './disabling_phase';
 import ExplorationPhase from './exploration_phase';
 import GameOver from './game_over';
 import Results from './results';
@@ -16,8 +15,6 @@ export default class Game extends React.Component {
       itemPerTile: objectFromArray(items.map(({x, y}) => x + '_' + y))
     };
     this.updateGame = this.updateGame.bind(this);
-    this.nextDisablingRoundStarted = this.nextDisablingRoundStarted.bind(this);
-    this.explorationPhaseStarted = this.explorationPhaseStarted.bind(this);
     this.diceRolled = this.diceRolled.bind(this);
     this.nextExplorationRoundStarted = this.nextExplorationRoundStarted.bind(this);
     this.playerMoved = this.playerMoved.bind(this);
@@ -30,9 +27,6 @@ export default class Game extends React.Component {
 
   componentDidMount() {
     Push.game = Push.socket.channel('game:' + this.props.game.gameId, {});
-    Push.game.on('player_disabled_tile', this.updateGame);
-    Push.game.on('next_disabling_round_started', this.nextDisablingRoundStarted);
-    Push.game.on('exploration_phase_started', this.explorationPhaseStarted);
     Push.game.on('dices_rolled', this.diceRolled);
     Push.game.on('player_moved', this.playerMoved);
     Push.game.on('next_exploration_round_started', this.nextExplorationRoundStarted);
@@ -53,10 +47,7 @@ export default class Game extends React.Component {
 
 
   getPhaseScene(game) {
-    if (game.phase == 'disabling') {
-      return <DisablingPhase {...this.props} game={game} />
-    }
-    else if (game.phase == 'exploration') {
+    if (game.phase == 'exploration') {
       return <ExplorationPhase {...this.props} game={game} updateGame={this.updateGame} />
     }
     else if (game.phase == 'results') {
@@ -106,18 +97,6 @@ export default class Game extends React.Component {
 
 
   gameEnded(game) {
-    this.updateGame(game);
-  }
-
-
-  nextDisablingRoundStarted(game) {
-    window.sounds.horn.play();
-    this.updateGame(game);
-  }
-
-
-  explorationPhaseStarted(game) {
-    window.sounds.horn.play();
     this.updateGame(game);
   }
 

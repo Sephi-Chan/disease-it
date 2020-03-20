@@ -11,7 +11,7 @@ export default class PlagueDoctors extends React.Component {
 
 
   shouldComponentUpdate () {
-    return this.props.phase == 'disabling';
+    return false;
   }
 
 

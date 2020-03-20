@@ -37,8 +37,8 @@ defmodule Diggers.GamesStore do
   end
 
 
-  def exploration_phase_started(game_id, board) do
-    GenServer.call(Diggers.GamesStore, {:exploration_phase_started, game_id, board})
+  def exploration_phase_started(game_id, board, disabled_tiles) do
+    GenServer.call(Diggers.GamesStore, {:exploration_phase_started, game_id, board, disabled_tiles})
   end
 
 
@@ -116,7 +116,7 @@ defmodule Diggers.GamesStore do
   end
 
 
-  def handle_call({:exploration_phase_started, game_id, board}, _from, state) do
+  def handle_call({:exploration_phase_started, game_id, board, disabled_tiles}, _from, state) do
     game_state = state[game_id].players
       |> Enum.reduce(state[game_id], fn (player_id, acc) ->
         Map.put(acc, player_id, %{
@@ -127,6 +127,7 @@ defmodule Diggers.GamesStore do
       end)
       |> put_in([:board], board)
       |> put_in([:phase], "exploration")
+      |> put_in([:disabled_tiles], disabled_tiles)
       |> put_in([:gone_players], [])
       |> put_in([:dead_players], [])
 
