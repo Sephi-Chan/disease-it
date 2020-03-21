@@ -30,7 +30,7 @@ Le partie s'achève quand chaque joueur a atteint le port ou a perdu tous ses po
 
 
 
-À propos du développement
+## À propos du développement
 
 Le serveur du jeu est développé avec le langage Elixir, en suivant une architecture CQRS/ES. Le framework Phoenix est utilisé pour la partie Web et les communications entre les clients et le serveur par WebSocket.
 
