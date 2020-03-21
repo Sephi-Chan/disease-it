@@ -12,7 +12,7 @@ export default class extends React.Component {
     audio.loop = true;
     audio.autoplay = music;
 
-    this.state = { audio: audio, muted: true };
+    this.state = { audio: audio, muted: undefined };
     this.toggle = this.toggle.bind(this);
   }
 
@@ -25,6 +25,8 @@ export default class extends React.Component {
 
 
   render() {
+    if (this.props.play && !this.state.muted) { this.state.audio.play(); }
+
     return <img id='toggle-music-button' src='/images/icons/icon_sound.png'
       onClick={this.toggle} className={this.state.audio.paused ? 'muted' : 'active'} />;
   }

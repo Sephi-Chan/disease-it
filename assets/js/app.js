@@ -17,7 +17,7 @@ import _ from './prefetch';
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { gameId: null, game: props.game };
+    this.state = { gameId: null, game: props.game, playMusic: undefined };
     this.openLobbyClicked = this.openLobbyClicked.bind(this);
     this.explorationPhaseStarted = this.explorationPhaseStarted.bind(this);
   }
@@ -30,7 +30,7 @@ class App extends React.Component {
         <a href="https://sephi-chan.itch.io/disease-it">itch.io</a> · <a href="https://github.com/Sephi-Chan/disease-it">github</a>
       </div>
       <LightModeButton />
-      <BackgroundMusic />
+      <BackgroundMusic play={this.state.playMusic} />
     </React.Fragment>;
   }
 
@@ -53,7 +53,7 @@ class App extends React.Component {
       .push('open_lobby', {})
       .receive('ok', function(response) {
         window.history.pushState({}, '', '/g/' + response.game_id);
-        this.setState({ gameId: response.game_id });
+        this.setState({ playMusic: true, gameId: response.game_id });
       }.bind(this));
   }
 
