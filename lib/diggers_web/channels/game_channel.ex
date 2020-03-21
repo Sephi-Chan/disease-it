@@ -22,12 +22,16 @@ defmodule DiggersWeb.GameChannel do
 
 
   def handle_in("start_exploration_phase", _params, socket) do
+    board = Diggers.Board.disease_it
+    disabled_tiles = Diggers.Board.random_tiles_to_disable(board, 5) |> Enum.map(fn ({x, y}) -> "#{x}_#{y}" end)
+
     :ok = Diggers.CommandedApplication.dispatch(%Diggers.PlayerStartsGame{
       game_id: socket.assigns.game_id,
       player_id: socket.assigns.player_id,
-      board: Diggers.Board.disease_it,
-      disabled_tiles: []
+      board: board,
+      disabled_tiles: disabled_tiles
     })
+
     {:noreply, socket}
   end
 

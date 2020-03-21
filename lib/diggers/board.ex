@@ -209,4 +209,19 @@ defmodule Diggers.Board do
       |> start_at({-4, -1})
       |> exit_at({3, 1})
   end
+
+
+  def random_tiles_to_disable(board, count) do
+    immune_tile_keys = [board["start_tile"], board["exit_tile"]] ++ Map.keys(board["diamonds"])
+    disablable_tiles = Map.drop(board["tiles"], immune_tile_keys) |> Map.keys() |> Enum.map(&Diggers.Tile.parse/1)
+
+    {tiles_to_disable, _} = Enum.reduce(1..count, {[], disablable_tiles}, fn(_number, {tiles_to_disable, disablable_tiles}) ->
+      random_tile = Enum.random(disablable_tiles)
+      neighbours = neighbours_of(board, random_tile)
+      new_disablable_tiles = disablable_tiles |> Enum.reject(fn (tile) -> Enum.member?(neighbours, tile) || tile == random_tile end)
+      {[random_tile|tiles_to_disable], new_disablable_tiles}
+    end)
+
+    tiles_to_disable
+  end
 end
