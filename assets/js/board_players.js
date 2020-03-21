@@ -22,7 +22,7 @@ export default function Players(props) {
     const classes = [
       'player',
       iSelf ? 'self' : null,
-      (props.game.gonePlayers || []).includes(props.playerId) ? 'gone' : null,
+      (props.game.gonePlayers || []).includes(playerId) ? 'gone' : null,
       iSelf ? null : `other-player-${indexOnTile + 1}-of-${otherPlayersOnTile.length}`
     ].join(' ');
     const srcSuffix = iSelf ? '_self' : '';
