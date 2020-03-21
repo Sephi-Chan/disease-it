@@ -140,7 +140,7 @@ body.light .shoreline { animation: none !important; }
   width: 200px;
 }
 .container #throw-dices-button.with-instructions {
-  top: 720px;
+  top: 540px;
   left: 290px;
   width: 150px;
 }
@@ -216,6 +216,12 @@ body.light .shoreline { animation: none !important; }
 }
 .container.lobby .slots .slot.empty { color: #888; }
 .container.lobby .slots .slot.self { color: #ffcc00; }
+.container.lobby .slots .slot img {
+  position: absolute;
+  height: 50px;
+  margin-left: -58px;
+  margin-top: -1px;
+}
 
 
 .container .rolled-dices {

@@ -3,7 +3,7 @@ import Push from './push';
 import camelCase from './camelcaser';
 import Board from './board';
 import { tiles, items } from './map';
-import { diseases } from './diseases';
+import { diseases, diseasesIcons } from './diseases';
 
 
 export default class Lobby extends React.Component {
@@ -78,7 +78,11 @@ export default class Lobby extends React.Component {
     const isEmpty = !this.state.players[index]
     const isSelf = this.props.playerId == this.state.players[index];
     const classes = [ 'slot', isEmpty ? 'empty' : null, isSelf ? 'self' : null ].join(' ');
-    return <div className={classes}>{diseases[index]}</div>;
+    const srcSuffix = isSelf ? '_self' : '';
+    return <div className={classes}>
+      <img src={`/images/icons/icon_${diseases[index].id}${srcSuffix}.png`} />
+      {diseases[index].name}
+    </div>;
   }
 
 

@@ -10,7 +10,23 @@
 }
 
 
-#map .player.gone { animation: bounce 0.4s infinite alternate; }
+#map .player { transform: scale(0.8); }
+#map .player.self { transform: scale(1); }
+
+#map .player.other-player-1-of-1 { margin-top: -10px; margin-left: -35px; }
+#map .player.other-player-1-of-2 { margin-top: -10px; margin-left: -35px; }
+#map .player.other-player-2-of-2 { margin-top: -10px; margin-left: 35px; }
+#map .player.other-player-1-of-3 { margin-top: -10px; margin-left: -35px; }
+#map .player.other-player-2-of-3 { margin-top: -10px; margin-left: 35px; }
+#map .player.other-player-3-of-3 { margin-top: -35px; }
+
+#map .player.gone { animation: bounce 0.4s infinite alternate; margin-top: -80px; margin-left: 220px; }
+#map .player.gone.other-player-1-of-1 { margin-top: -90px; margin-left: 185px; }
+#map .player.other-player-1-of-2 { margin-top: -90px; margin-left: 185px; }
+#map .player.other-player-2-of-2 { margin-top: -90px; margin-left: 255px; }
+#map .player.other-player-1-of-3 { margin-top: -90px; margin-left: 185px; }
+#map .player.other-player-2-of-3 { margin-top: -90px; margin-left: 35px; }
+#map .player.other-player-3-of-3 { margin-top: -125px; margin-left: 220px; }
 
 
 #map .path {

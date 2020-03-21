@@ -24,6 +24,7 @@ export default class ExplorationPhase extends React.Component {
       {this.lifes()}
       <Board {...this.props} width={1440} height={900} tiles={tiles} items={items} originX={1440/2 + 50} originY={900/2 - 30} onBadgeClick={this.onTileClick} />
       {this.diceRoller(player)}
+      {this.helpMessages(player)}
     </React.Fragment>;
   }
 
@@ -45,15 +46,16 @@ export default class ExplorationPhase extends React.Component {
 
 
   instructionsContainer(player, isGone) {
-    if (this.state.showInstructions &&  player.path.length == 1 && player.currentRound == null) {
+    if (this.state.showInstructions && player.path.length == 1 && player.currentRound == null) {
       return <div className='instructions-container tallest'>
-        <img src='/images/icons/icon_close.png' className='close' onClick={this.dismissInstructions} />
+        <p>Vote objectif est de <span>rejoindre le port</span>. Marquez des points en traversant le plus de <span>villages</span>, <span>campements</span>, <span>moulins</span>… possible en chemin : chacun rapporte <span>3 points</span>.</p>
+        <p>En début de tour, {this.someoneThrowDices()} : vous devez <span>vous déplacer</span> vers une case adjacente qui porte un chiffre indiqué par les dés. Si aucune case n'est disponible : vous <span>perdez</span> un point de mort ! Vous êtes <span>éliminé</span> quand vous n'en avez plus.</p>
+        <p>Ne perdez pas de temps : <span>les premiers arrivés</span> au port seront récompensés ! <span>6 points</span> pour le premier, 4 pour le deuxième, 2 pour le troisième.</p>
+        <p>À chaque fois qu'un joueur atteint le port, <span>un dé de moins</span> est lancé, réduisant ainsi les possibilités de déplacement !</p>
 
-        <p>Vous êtes représenté par <span>un crâne</span>.</p>
-        <p>Vote objectif est de <span>rejoindre le port</span>. Marquez des points en traversant le plus de <span>villages</span>, <span>campements</span>, <span>moulins</span>… possible en chemin.</p>
-        <p>En début de tour, {this.someoneThrowDices()} : chaque joueur doit <span>se déplacer</span> sur une case adjacente qui porte un nombre indiqué par les dés. Si aucune case n'est disponible : vous <span>perdez</span> un point de mort ! Vous êtes <span>éliminé</span> quand vous n'en avez plus.</p>
-        <p>Ne perdez pas de temps : <span>les premiers arrivés</span> au port seront récompensés !</p>
-        <p>À chaque fois qu'un joueur atteint le port, <span>un dé de moins</span> est lancé en début de tour, resserrant un peu plus l'étau sur les joueurs restants !</p>
+        {this.isDiceThrower(this.props.game, this.props.playerId)
+          ? <img src='/images/ui/dices.png' id='throw-dices-button' className='with-instructions' onClick={this.rollDicesClicked} />
+          : <div className='button enabled' onClick={this.dismissInstructions}>J'ai compris !</div>}
       </div>;
     }
     else if (isGone) {
@@ -76,8 +78,8 @@ export default class ExplorationPhase extends React.Component {
   diceRoller(player) {
     if (this.props.game.dicesRolls) return;
     if (!this.isDiceThrower(this.props.game, this.props.playerId)) return;
-    const withInstructions = this.state.showInstructions && player.path.length == 1 && player.currentRound == null;
-    return <img src='/images/ui/dices.png' id='throw-dices-button' className={withInstructions ? 'with-instructions' : null} onClick={this.rollDicesClicked} />;
+    if (this.state.showInstructions) return;
+    return <img src='/images/ui/dices.png' id='throw-dices-button' onClick={this.rollDicesClicked} />;
   }
 
 
@@ -110,5 +112,13 @@ export default class ExplorationPhase extends React.Component {
         }
       }.bind(this))}
     </div>
+  }
+
+
+  helpMessages(player) {
+    return <React.Fragment>
+      {player.path.length == 1 && <p className='help-message origin'><span>Vous êtes ici…</span></p>}
+      <p className='help-message destination'><span>Votre objectif est ici…</span></p>
+    </React.Fragment>;
   }
 }

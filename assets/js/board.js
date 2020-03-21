@@ -2,8 +2,9 @@ import React from 'react';
 import Ocean from './board_ocean';
 import Land from './board_land';
 import Path from './board_path';
+import Badge from './board_badge';
 import PlagueDoctors from './board_plague_doctors';
-import { scale, distanceBetweenOriginsX, distanceBetweenOriginsY, playerIconImageWidth, badgeHitboxTopShift, badgeHitboxWidth, badgeHitboxHeight, badgeImageWidth } from './map';
+import Players from './board_players';
 import { remap, objectFromArray, parseTile } from './utils';
 
 
@@ -22,7 +23,7 @@ export default class Board extends React.Component {
 
     return <div id='map' className={this.props.game ? this.props.game.phase : null}>
       {this.badges(playerTile, disabledTiles, neighbourTiles)}
-      {this.player()}
+      {this.props.game && <Players game={this.props.game} originX={this.state.originX} originY={this.state.originY} playerId={this.props.playerId} />}
       <PlagueDoctors tiles={this.props.tiles} disabledTiles={disabledTiles} originX={this.state.originX} originY={this.state.originY} phase={this.props.game ? this.props.game.phase : null} />
       <Land items={this.props.items} tiles={this.props.tiles} originX={this.state.originX} originY={this.state.originY} />
       <Ocean tiles={this.state.tiles} originX={this.state.originX} originY={this.state.originY} />
@@ -70,23 +71,6 @@ export default class Board extends React.Component {
   }
 
 
-  player() {
-    if (!this.props.game || this.props.game.phase == 'lobby') return null;
-
-    const player = this.props.game[this.props.playerId];
-    const classes = [ 'player', (this.props.game.gonePlayers || []).indexOf(this.props.playerId) != -1 ? 'gone leaving' : null ].join(' ');
-    const [x, y] = parseTile(player.path[0]);
-    const style = {
-      left: Math.round(this.props.originX + (distanceBetweenOriginsX * (x - y) * scale) - (playerIconImageWidth / 2 * scale)),
-      top: Math.round(this.props.originY - (distanceBetweenOriginsY / 2 * (x + y) * scale) - (badgeHitboxTopShift * scale) - 15),
-      width: Math.round(playerIconImageWidth * scale),
-      zIndex: 210000000
-    }
-
-    return <img src={'/images/icons/icon_player.png'} className={classes} style={style} draggable='false' />;
-  }
-
-
   buildState(props) {
     this.state = {
       tiles: props.tiles,
@@ -111,38 +95,5 @@ export default class Board extends React.Component {
       tile.zIndex = scoreY * 10000 - scoreX;
       if (tile.zIndex > this.state.maxZIndex) this.state.maxZIndex = tile.zIndex;
     }).bind(this));
-  }
-}
-
-
-class Badge extends React.Component {
-  constructor(props) {
-    super(props);
-    this.badgeClicked = this.badgeClicked.bind(this);
-  }
-
-
-  render() {
-    const imageStyle = {
-      width: Math.round(badgeImageWidth * scale),
-      marginLeft: -badgeImageWidth / 2 * scale
-    };
-    const classes = [ 'badge', this.props.isActive ? 'active' : null ].join(' ')
-    const style = {
-      left: Math.round(this.props.originX + (distanceBetweenOriginsX * (this.props.x - this.props.y) * scale) - (badgeHitboxWidth / 2 * scale)),
-      top: Math.round(this.props.originY - (distanceBetweenOriginsY / 2 * (this.props.x + this.props.y) * scale) - (badgeHitboxTopShift * scale)),
-      width: Math.round(badgeHitboxWidth * scale),
-      height: Math.round(badgeHitboxHeight * scale),
-      zIndex: this.props.zIndex + 250000000,
-    };
-
-    return <div className={classes} style={style} onClick={this.props.isActive ? this.badgeClicked : null}>
-      <img src={'/images/icons/icon_' + this.props.diceRolls[0] + '.png'}  draggable='false' style={imageStyle} />
-    </div>;
-  }
-
-
-  badgeClicked() {
-    this.props.onBadgeClick({ x: this.props.x, y: this.props.y });
   }
 }

@@ -27,7 +27,7 @@ export default class Results extends React.Component {
         {this.props.game.winners.map(function({playerId, score}) {
           const indexInGame = this.props.game.players.indexOf(playerId);
           return <tr key={playerId} className={playerId == currentPlayerId ? 'self' : null}>
-            <td>{diseases[indexInGame]}</td>
+            <td>{diseases[indexInGame].name}</td>
             <td>{score} points</td>
           </tr>;
         }.bind(this))}
