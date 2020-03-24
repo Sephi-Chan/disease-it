@@ -17,6 +17,11 @@ defmodule Diggers.GamesStore do
   end
 
 
+  def open_lobbies() do
+    GenServer.call(Diggers.GamesStore, :open_lobbies)
+  end
+
+
   def lobby_opened(game_id, player_id) do
     GenServer.call(Diggers.GamesStore, {:lobby_opened, game_id, player_id})
   end
@@ -84,6 +89,12 @@ defmodule Diggers.GamesStore do
 
   def handle_call(:game_ids, _from, state) do
     {:reply, Map.keys(state), state}
+  end
+
+
+  def handle_call(:open_lobbies, _from, state) do
+    lobbies = state |> Enum.filter(fn ({_game_id, game}) -> game.phase == "lobby" end) |> Keyword.values
+    {:reply, lobbies, state}
   end
 
 

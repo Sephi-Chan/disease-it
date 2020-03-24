@@ -19,6 +19,7 @@ class App extends React.Component {
     super(props);
     this.state = { gameId: null, game: props.game, playMusic: undefined };
     this.openLobbyClicked = this.openLobbyClicked.bind(this);
+    this.publicLobbyClicked = this.publicLobbyClicked.bind(this);
     this.explorationPhaseStarted = this.explorationPhaseStarted.bind(this);
   }
 
@@ -43,7 +44,7 @@ class App extends React.Component {
       return <Lobby {...this.props} gameId={gameId} updateGame={this.explorationPhaseStarted} />;
     }
     else {
-      return <Home {...this.props} openLobbyClicked={this.openLobbyClicked} />;
+      return <Home {...this.props} openLobbyClicked={this.openLobbyClicked} publicLobbyClicked={this.publicLobbyClicked} />;
     }
   }
 
@@ -55,6 +56,12 @@ class App extends React.Component {
         window.history.pushState({}, '', '/g/' + response.game_id);
         this.setState({ playMusic: true, gameId: response.game_id });
       }.bind(this));
+  }
+
+
+  publicLobbyClicked(gameId) {
+    window.history.pushState({}, '', '/g/' + gameId);
+    this.setState({ playMusic: true, gameId });
   }
 
 

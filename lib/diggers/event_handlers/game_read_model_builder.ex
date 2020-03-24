@@ -12,13 +12,15 @@ defmodule Diggers.GameReadModelBuilder do
 
 
   def handle(event = %Diggers.LobbyOpened{}, _metadata) do
-    Diggers.GamesStore.lobby_opened(event.game_id, event.player_id)
+    lobby = Diggers.GamesStore.lobby_opened(event.game_id, event.player_id)
+    DiggersWeb.Endpoint.broadcast!("general", "lobby_opened", lobby)
     :ok
   end
 
 
   def handle(event = %Diggers.LobbyClosed{}, _metadata) do
     Diggers.GamesStore.lobby_closed(event.game_id)
+    DiggersWeb.Endpoint.broadcast!("general", "lobby_closed", %{ game_id: event.game_id })
     :ok
   end
 
@@ -40,6 +42,7 @@ defmodule Diggers.GameReadModelBuilder do
   def handle(event = %Diggers.ExplorationPhaseStarted{}, _metadata) do
     game = Diggers.GamesStore.exploration_phase_started(event.game_id, event.board, event.disabled_tiles)
     DiggersWeb.Endpoint.broadcast!("game:#{event.game_id}", "exploration_phase_started", game)
+    DiggersWeb.Endpoint.broadcast!("general", "exploration_phase_started", %{ game_id: game.game_id })
     :ok
   end
 

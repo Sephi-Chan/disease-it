@@ -255,3 +255,19 @@ body.light .shoreline { animation: none !important; }
   0% { transform: translate(0, 0); }
   100% { transform: translate(0, -4px); }
 }
+
+.container .public-games {
+  height: 400px;
+  margin: 0 30px;
+}
+
+.container .public-games .public-game {
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+  cursor: pointer;
+  width: 666px;
+  margin: 20px auto;
+  background-image: url("/images/ui/lobby-button.png");
+}
+.container .public-games .public-game:hover { color: #ffcc00; }
