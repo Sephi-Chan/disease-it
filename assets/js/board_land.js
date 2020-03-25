@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from './image';
 import { scale, distanceBetweenOriginsX, distanceBetweenOriginsY, tileOriginX, tileOriginY, tileImageWidth, tileImageHeight } from './map';
 
 
@@ -51,7 +52,7 @@ function Item({ x, y, item, offsetX, offsetY, originX, originY, alreadyVisited }
     zIndex: 205000000
   };
 
-  return <img src={'/images/items/item_' + item + '.png'} style={style} draggable='false' className={classes} />
+  return <Image src={'/images/items/item_' + item + '.png'} style={style} draggable='false' className={classes} />
 }
 
 
@@ -64,5 +65,5 @@ function Tile({ x, y, terrain, zIndex, originX, originY }) {
     zIndex: zIndex
   }
 
-  return <img src={'/images/tiles/tile_' + terrain + '.png'} style={style} draggable='false' />;
+  return <Image src={'/images/tiles/tile_' + terrain + '.png'} style={style} draggable='false' />;
 }
